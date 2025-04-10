@@ -747,3 +747,54 @@ $(document).ready(function() {
         $("#validator-contact").removeClass().addClass(msgClasses).text(msg);
     }
 });
+
+// Works Tab Initialization
+function initWorksTab() {
+    // Initialize Isotope if available
+    if (typeof Isotope !== 'undefined') {
+        const grid = document.querySelector('.js-filter-container');
+        if (grid) {
+            // Initialize Isotope
+            const iso = new Isotope(grid, {
+                itemSelector: '.gallery-grid__item',
+                percentPosition: true,
+                masonry: {
+                    columnWidth: '.gutter-sizer'
+                }
+            });
+
+            // Filter buttons
+            const filterLinks = document.querySelectorAll('.filter__link');
+            filterLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all buttons
+                    filterLinks.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Filter items
+                    const filterValue = this.parentNode.getAttribute('data-filter');
+                    iso.arrange({ filter: filterValue });
+                });
+            });
+        }
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Check if Works tab is active on load
+    if (document.querySelector('#works-tab.active')) {
+        initWorksTab();
+    }
+});
+
+// Reinitialize when switching to Works tab
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.nav__item a[href="#works-tab"]')) {
+        setTimeout(initWorksTab, 100);
+    }
+});
