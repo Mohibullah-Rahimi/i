@@ -2475,5 +2475,102 @@ button:focus {
   height: 100%;
   z-index: -1;
 }
+/* Mobile filter improvements */
+@media (max-width: 767px) {
+  .filter {
+      display: none;
+  }
+  .select {
+      display: block;
+      margin-bottom: 20px;
+  }
+  .select .placeholder {
+      padding: 10px 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      cursor: pointer;
+  }
+  .select ul {
+      width: 100%;
+      box-sizing: border-box;
+  }
+}
 
+
+
+
+
+
+/* Desktop zoom improvements *//* Mobile filter improvements */
 /*# sourceMappingURL=style.css.map */
+/* Portfolio Filter */
+.portfolio-filter {
+  margin-bottom: 30px;
+}
+
+.filter-select {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+  z-index: 100;
+}
+
+.select-header {
+  padding: 10px 15px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.filter-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #2d2d2d;
+  border-radius: 4px;
+  margin-top: 5px;
+  padding: 10px 0;
+  list-style: none;
+}
+
+.filter-options.show {
+  display: block;
+}
+
+.filter-option {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.filter-option:hover, 
+.filter-option.active {
+  background: rgba(255,255,255,0.1);
+}
+
+/* Mobile Styles */
+@media (max-width: 767px) {
+  .filter-select {
+      width: 100%;
+  }
+}
+
+/* Image Zoom Fix */
+[data-zoom] {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.medium-zoom-overlay {
+  z-index: 999;
+  background: rgba(0, 0, 0, 0.9) !important;
+}
+
+.medium-zoom-image {
+  z-index: 1000;
+  cursor: zoom-out !important;
+}
