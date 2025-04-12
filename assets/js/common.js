@@ -1,79 +1,78 @@
 /*
- * Author: ArtStyles (ArtTemplate)
- * Template Name: vCard
- * Version: 1.0.0
- * Updated for Works Tab functionality
-*/
+ * Optimized vCard JS
+ * Author: Mohibullah Rahimi
+ * Original Author: ArtStyles (ArtTemplate)
+ * Version: 2.0.0
+ * Optimized for performance and reliability
+ */
 
 $(document).ready(function() {
     'use strict';
 
-    /*-----------------------------------------------------------------
-      Detect device mobile
-    -------------------------------------------------------------------*/
-    var isMobile = false; 
-    if(/Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        $('html').addClass('touch');
-        isMobile = true;
-    } else {
-        $('html').addClass('no-touch');
-        isMobile = false;
-    }
-    
-    //IE, Edge
-    var isIE = /MSIE 9/i.test(navigator.userAgent) || /rv:11.0/i.test(navigator.userAgent) || /MSIE 10/i.test(navigator.userAgent) || /Edge\/\d+/.test(navigator.userAgent);
+    // Cache frequently used elements
+    const $window = $(window);
+    const $document = $(document);
+    const $html = $('html');
+    const $body = $('body');
 
     /*-----------------------------------------------------------------
-      Loaded
+      Device Detection
     -------------------------------------------------------------------*/
-    anime({
-        targets: 'body',
-        opacity: 1,
-        delay: 400,
-        complete: function(anim) {
-            progressBar();
-        }
-    });
+    const isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    const isIE = /MSIE|Trident|Edge/.test(navigator.userAgent);
     
-    $('body, .js-img-load').imagesLoaded({ background: !0 }).always(function(instance) {
-        preloader();
-    });
+    $html.addClass(isMobile ? 'touch' : 'no-touch');
+
+    /*-----------------------------------------------------------------
+      Page Load Initialization
+    -------------------------------------------------------------------*/
+    function initializePage() {
+        // Initial animations
+        anime({
+            targets: 'body',
+            opacity: 1,
+            delay: 400,
+            complete: progressBar
+        });
+
+        // Preloader
+        $('body, .js-img-load').imagesLoaded({ background: true }).always(preloader);
+    }
 
     function preloader() {
-        var tl = anime.timeline({}); 
-        tl
-        .add({
-            targets: '.preloader',
-            duration: 1,
-            opacity: 1
-        })
-        .add({
-            targets: '.circle-pulse',
-            duration: 300,
-            opacity: 1,
-            zIndex: '-1',
-            easing: 'easeInOutQuart'
-        },'+=500')
-        .add({
-            targets: '.preloader__progress span',
-            duration: 500,
-            width: '100%',
-            easing: 'easeInOutQuart'
-        },'-=500')
-        .add({
-            targets: '.preloader',
-            duration: 500,
-            opacity: 0,
-            zIndex: '-1',
-            easing: 'easeInOutQuart'
-        });
-    };
+        anime.timeline({})
+            .add({
+                targets: '.preloader',
+                duration: 1,
+                opacity: 1
+            })
+            .add({
+                targets: '.circle-pulse',
+                duration: 300,
+                opacity: 1,
+                zIndex: '-1',
+                easing: 'easeInOutQuart'
+            }, '+=500')
+            .add({
+                targets: '.preloader__progress span',
+                duration: 500,
+                width: '100%',
+                easing: 'easeInOutQuart'
+            }, '-=500')
+            .add({
+                targets: '.preloader',
+                duration: 500,
+                opacity: 0,
+                zIndex: '-1',
+                easing: 'easeInOutQuart'
+            });
+    }
 
     /*-----------------------------------------------------------------
-      Carousel
-    -------------------------------------------------------------------*/    
-    // Testimonials
-    $('.js-carousel-review').each(function() {
+      Carousels
+    -------------------------------------------------------------------*/
+    function initCarousels() {
+        // Testimonials Carousel
         new Swiper('.js-carousel-review', {
             slidesPerView: 1,
             spaceBetween: 30,
@@ -88,15 +87,11 @@ $(document).ready(function() {
                 delay: 5000,
             },
             breakpoints: {
-                580: {
-                    spaceBetween: 20
-                }
+                580: { spaceBetween: 20 }
             }
         });
-    });
-    
-    // Clients
-    $('.js-carousel-clients').each(function() {
+
+        // Clients Carousel
         new Swiper('.js-carousel-clients', {
             slidesPerView: 4,
             spaceBetween: 30,
@@ -107,403 +102,383 @@ $(document).ready(function() {
                 clickable: true
             },
             breakpoints: {
-                320: {
-                    slidesPerView: 1,
-                    spaceBetween: 0
-                },              
-                580: {
-                    slidesPerView: 2,
-                    spaceBetween: 30
-                },              
-                991: {
-                    slidesPerView: 3,
-                    spaceBetween: 30
-                }
+                320: { slidesPerView: 1, spaceBetween: 0 },
+                580: { slidesPerView: 2, spaceBetween: 30 },
+                991: { slidesPerView: 3, spaceBetween: 30 }
             }
         });
-    });
-    
-    /*-----------------------------------------------------------------
-      Sticky sidebar
-    -------------------------------------------------------------------*/
-    setTimeout(function() { 
-        function activeStickyKit() {
-            $('.sticky-column').stick_in_parent({
-                parent: '.sticky-parent'
-            });
+    }
 
-            $('.sticky-column')
-            .on('sticky_kit:bottom', function(e) {
+    /*-----------------------------------------------------------------
+      Sticky Sidebar
+    -------------------------------------------------------------------*/
+    function initStickySidebar() {
+        const $stickyColumn = $('.sticky-column');
+        const $stickyParent = $('.sticky-parent');
+        const screenBreakpoint = 1200;
+
+        function activateSticky() {
+            $stickyColumn.stick_in_parent({
+                parent: $stickyParent
+            }).on('sticky_kit:bottom', function() {
                 $(this).parent().css('position', 'static');
-            })
-            .on('sticky_kit:unbottom', function(e) {
+            }).on('sticky_kit:unbottom', function() {
                 $(this).parent().css('position', 'relative');
             });
-        };
-
-        function detachStickyKit() {
-            $('.sticky-column').trigger("sticky_kit:detach");
-        };
-
-        var screen = 1200;
-        var windowWidth = $(window).width();
-        if ((windowWidth < screen)) {
-            detachStickyKit();
-        } else {
-            activeStickyKit();
         }
 
-        function windowSize() {
-            windowHeight = window.innerHeight ? window.innerHeight : $(window).height();
-            windowWidth = window.innerWidth ? window.innerWidth : $(window).width();
+        function deactivateSticky() {
+            $stickyColumn.trigger("sticky_kit:detach");
         }
-        windowSize();
 
-        function debounce(func, wait, immediate) {
-            var timeout;
-            return function() {
-                var context = this, args = arguments;
-                var later = function() {
-                    timeout = null;
-                    if (!immediate) func.apply(context, args);
-                };
-                var callNow = immediate && !timeout;
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-                if (callNow) func.apply(context, args);
-            };
-        };
-
-        $(window).resize(debounce(function(){
-            windowSize();
-            $(document.body).trigger("sticky_kit:recalc");
-            if (windowWidth < screen) {
-                detachStickyKit();
+        function handleResize() {
+            const windowWidth = $window.width();
+            if (windowWidth < screenBreakpoint) {
+                deactivateSticky();
             } else {
-                activeStickyKit();
+                activateSticky();
             }
-        }, 250));
-    }, 10);
+            $document.body.trigger("sticky_kit:recalc");
+        }
+
+        // Initial setup
+        if ($window.width() >= screenBreakpoint) {
+            activateSticky();
+        }
+
+        // Debounced resize handler
+        $window.on('resize', debounce(handleResize, 250));
+    }
 
     /*-----------------------------------------------------------------
-      Progress bar
+      Progress Bar Animation
     -------------------------------------------------------------------*/
     function progressBar() {
-        $('.progress').each(function() {
-            var ctrl = new ScrollMagic.Controller();
-            new ScrollMagic.Scene({
-                triggerElement: '.progress',
-                triggerHook: 'onEnter',
-                duration: 300
-            })
-            .addTo(ctrl)
-            .on("enter", function (e) {
-                var progressBar = $('.progress-bar');
-                progressBar.each(function(indx){
-                    $(this).css({'width': $(this).attr('aria-valuenow') + '%', 'z-index': '2'});
+        const ctrl = new ScrollMagic.Controller();
+        new ScrollMagic.Scene({
+            triggerElement: '.progress',
+            triggerHook: 'onEnter',
+            duration: 300
+        })
+        .on("enter", function() {
+            $('.progress-bar').each(function() {
+                $(this).css({
+                    'width': $(this).attr('aria-valuenow') + '%',
+                    'z-index': '2'
                 });
             });
-        });
+        })
+        .addTo(ctrl);
     }
-    
+
     /*-----------------------------------------------------------------
-      Scroll indicator
+      Scroll Indicator
     -------------------------------------------------------------------*/
-    function scrollIndicator() {
-        $(window).on('scroll', function() {
-            var wintop = $(window).scrollTop(), 
-                docheight = $(document).height(), 
-                winheight = $(window).height();
-            var scrolled = (wintop/(docheight-winheight))*100;
-            $('.scroll-line').css('width', (scrolled + '%'));
+    function initScrollIndicator() {
+        $window.on('scroll', function() {
+            const scrollPercent = ($window.scrollTop() / ($document.height() - $window.height())) * 100;
+            $('.scroll-line').css('width', scrollPercent + '%');
         });
     }
-    scrollIndicator();
-    
+
     /*-----------------------------------------------------------------
-      Jarallax
-    -------------------------------------------------------------------*/        
-    function parallax() {
+      Parallax Effect
+    -------------------------------------------------------------------*/
+    function initParallax() {
         $('.js-parallax').jarallax({
-            disableParallax: function () {
-                return isIE
-            },
+            disableParallax: isIE,
             speed: 0.65,
             type: 'scroll'
         });
-    };
-    parallax();
-    
+    }
+
     /*-----------------------------------------------------------------
-      ScrollTo
+      Scroll To Top
     -------------------------------------------------------------------*/
-    function scrollToTop() {
-        var $backToTop = $('.back-to-top'),
-            $showBackTotop = $(window).height();
-            
+    function initScrollToTop() {
+        const $backToTop = $('.back-to-top');
+        const showHeight = $window.height();
+
         $backToTop.hide();
 
-        $(window).scroll(function() {
-            var windowScrollTop = $(window).scrollTop();
-            if(windowScrollTop > $showBackTotop) {
-                $backToTop.fadeIn('slow');
-            } else {
-                $backToTop.fadeOut('slow');
-            }
+        $window.on('scroll', function() {
+            $backToTop.toggle($window.scrollTop() > showHeight);
         });
-        
-        $backToTop.on('click', function (e) {
+
+        $backToTop.on('click', function(e) {
             e.preventDefault();
-            $('body, html').animate({scrollTop: 0}, 'slow');
+            $('html, body').animate({scrollTop: 0}, 'slow');
         });
     }
-    scrollToTop();
-    
-    /*-----------------------------------------------------------------
-      Autoresize textarea
-    -------------------------------------------------------------------*/    
-    $('textarea').each(function(){
-        autosize(this);
-    });
 
     /*-----------------------------------------------------------------
-      Tabs
-    -------------------------------------------------------------------*/    
-    $('.js-tabs').each(function(){
-        $('.content .tabcontent').hide();
-        $('.content .tabcontent:first').show();
-        $('.nav__item a').on('click', function() {
-            $('.nav__item a').removeClass('active');
+      Auto-resize Textarea
+    -------------------------------------------------------------------*/
+    function initTextareaResize() {
+        $('textarea').each(function() {
+            autosize(this);
+        });
+    }
+
+    /*-----------------------------------------------------------------
+      Tabs System
+    -------------------------------------------------------------------*/
+    function initTabs() {
+        const $tabContents = $('.content .tabcontent');
+        const $tabLinks = $('.nav__item a');
+        const mobileBreakpoint = 580;
+
+        // Hide all tabs except first
+        $tabContents.hide().first().show();
+
+        $tabLinks.on('click', function(e) {
+            e.preventDefault();
+            
+            // Update active tab
+            $tabLinks.removeClass('active');
             $(this).addClass('active');
-            var currentTab = $(this).attr('href');
-            $('.content .tabcontent').hide();            
+            
+            // Show selected content
+            const currentTab = $(this).attr('href');
+            $tabContents.hide();
             $(currentTab).show();
             
-            // Reinitialize Works tab if needed
-            if(currentTab === '#works-tab') {
-                setTimeout(function() {
-                    initPortfolioFilter();
-                    initImageZoom();
-                }, 300);
+            // Special handling for Works tab
+            if (currentTab === '#works-tab') {
+                setTimeout(initWorksTab, 300);
             }
             
-            return false;
-        });
-        
-        // Mobile close menu
-        var screenMobile = 580;
-        var windowWidth = $(window).width();
-        if ((windowWidth < screenMobile)) {    
-            $(".nav__item a").click(function(e) {
-                e.preventDefault();
-                var offset = -35;
+            // Mobile behavior
+            if ($window.width() < mobileBreakpoint) {
                 $('html, body').animate({
-                    scrollTop: $("#content").offset().top + offset
+                    scrollTop: $("#content").offset().top - 35
                 }, 0);
-            });            
-        }
-    });
-    
-    /*-----------------------------------------------------------------
-      Tooltip
-    -------------------------------------------------------------------*/
-    $(function() {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
-
-    /*-----------------------------------------------------------------
-      Portfolio Filter and Masonry - WORKING IMPLEMENTATION
-    -------------------------------------------------------------------*//*-----------------------------------------------------------------
-  Portfolio Filter - Fixed Implementation
-------------------------------------------------------------------*/
-function initPortfolioFilter() {
-    // Mobile filter toggle
-    $('.select-header').on('click', function(e) {
-        e.stopPropagation();
-        $('.filter-options').toggleClass('show');
-    });
-    
-    // Filter selection
-    $('.filter-option').on('click', function() {
-        const filterValue = $(this).data('filter');
-        $('.selected-option').text($(this).text());
-        $('.filter-option').removeClass('active');
-        $(this).addClass('active');
-        $('.filter-options').removeClass('show');
-        
-        $('.js-filter-container').isotope({ filter: filterValue });
-    });
-    
-    // Close when clicking outside
-    $(document).on('click', function() {
-        $('.filter-options').removeClass('show');
-    });
-    
-    // Initialize Isotope
-    const $grid = $('.js-filter-container').isotope({
-        itemSelector: '.gallery-grid__item',
-        percentPosition: true,
-        masonry: {
-            columnWidth: '.gutter-sizer'
-        }
-    });
-    
-    // Layout after images load
-    $grid.imagesLoaded().progress(function() {
-        $grid.isotope('layout');
-    });
-}
-
-/*-----------------------------------------------------------------
-  Image Zoom - Fixed Implementation (single click)
-------------------------------------------------------------------*/
-function initImageZoom() {
-    if ($(window).width() > 768) {
-        mediumZoom('[data-zoom]', {
-            margin: 40,
-            background: 'rgba(0, 0, 0, 0.9)',
-            template: '#zoom-template',
-            onOpen: function() {
-                document.body.style.overflow = 'hidden';
-            },
-            onClose: function() {
-                document.body.style.overflow = '';
             }
         });
     }
-}
-
-// Initialize on Works tab load
-$('.nav__item a[href="#works-tab"]').on('click', function() {
-    setTimeout(function() {
-        initPortfolioFilter();
-        initImageZoom();
-    }, 300);
-});
-
-// Initialize if Works tab is active on page load
-if ($('#works-tab').hasClass('active')) {
-    initPortfolioFilter();
-    initImageZoom();
-}
 
     /*-----------------------------------------------------------------
-      Image Zoom - WORKING IMPLEMENTATION
+      Portfolio Filter and Masonry
     -------------------------------------------------------------------*/
+    function initPortfolioFilter() {
+        const $gallery = $('.gallery-grid');
+        const $filterOptions = $('.filter-options');
+        const $selectHeader = $('.select-header');
+        const $filterOption = $('.filter-option');
+
+        // Mobile filter toggle
+        $selectHeader.on('click', function(e) {
+            e.stopPropagation();
+            $filterOptions.toggleClass('show');
+        });
+
+        // Filter selection
+        $filterOption.on('click', function() {
+            const filterValue = $(this).data('filter');
+            $('.selected-option').text($(this).text());
+            $filterOption.removeClass('active');
+            $(this).addClass('active');
+            $filterOptions.removeClass('show');
+            
+            $gallery.isotope({ filter: filterValue });
+        });
+
+        // Close when clicking outside
+        $document.on('click', function() {
+            $filterOptions.removeClass('show');
+        });
+
+        // Initialize Isotope
+        $gallery.isotope({
+            itemSelector: '.gallery-grid__item',
+            percentPosition: true,
+            masonry: { columnWidth: '.gutter-sizer' }
+        });
+
+        // Layout after images load
+        $gallery.imagesLoaded().progress(function() {
+            $gallery.isotope('layout').addClass('is-loaded');
+        });
+    }
+
+    /*-----------------------------------------------------------------
+      Image Zoom
+    -------------------------------------------------------------------*/
+    let zoomInstance = null;
+
     function initImageZoom() {
         // Only initialize on desktop
-        if ($(window).width() > 768 && typeof mediumZoom !== 'undefined') {
-            mediumZoom('[data-zoom]', {
+        if ($window.width() <= 768) return;
+        
+        // Clean up previous instance
+        if (zoomInstance) {
+            zoomInstance.detach();
+            zoomInstance = null;
+        }
+        
+        // Initialize new zoom
+        try {
+            zoomInstance = mediumZoom('[data-zoom]', {
                 margin: 40,
-                background: 'rgba(0, 0, 0, 0.9)'
+                background: 'rgba(0, 0, 0, 0.9)',
+                onOpen: () => $body.addClass('no-scroll'),
+                onClose: () => $body.removeClass('no-scroll')
             });
+        } catch (e) {
+            console.error("Zoom initialization failed:", e);
         }
     }
 
     /*-----------------------------------------------------------------
-      Initialize Works Tab Features
+      Works Tab Initialization
     -------------------------------------------------------------------*/
     function initWorksTab() {
         initPortfolioFilter();
         initImageZoom();
     }
 
-    // Initialize if Works tab is active on page load
-    if ($('#works-tab').hasClass('active')) {
-        initWorksTab();
+    /*-----------------------------------------------------------------
+      Lazy Loading
+    -------------------------------------------------------------------*/
+    function initLazyLoad() {
+        lazySizes.init();
     }
 
-    // Initialize when switching to Works tab
-    $('.nav__item a[href="#works-tab"]').on('click', function() {
-        setTimeout(initWorksTab, 300);
-    });
-
     /*-----------------------------------------------------------------
-      Lazyload
+      Object-fit Polyfill
     -------------------------------------------------------------------*/
-    lazySizes.init();
+    function initObjectFit() {
+        objectFitImages($('img.cover'));
+    }
 
     /*-----------------------------------------------------------------
-      Polyfill object-fit
-    -------------------------------------------------------------------*/    
-    var $someImages = $('img.cover');
-    objectFitImages($someImages);
-    
-    /*-----------------------------------------------------------------
-      Contacts form
+      Contact Form
     -------------------------------------------------------------------*/
-    $("#contact-form").validator().on("submit", function(event) {
-        if (event.isDefaultPrevented()) {
-            formError();
-            submitMSG(false, "Please fill in the form...");
-        } else {
-            event.preventDefault();
-            submitForm();
-        }
-    });
-
-    function submitForm() {
-        var name = $("#nameContact").val(),
-            email = $("#emailContact").val(),
-            message = $("#messageContact").val();
-            
-        var url = "assets/php/form-contact.php";
+    function initContactForm() {
+        const $form = $("#contact-form");
+        const $validatorContact = $("#validator-contact");
         
-        $.ajax({
-            type: "POST",
-            url: url,
-            data: "name=" + name + "&email=" + email + "&message=" + message,
-            success: function(text) {
-                if (text == "success") {
-                    formSuccess();
-                } else {
-                    formError();
-                    submitMSG(false, text);
-                }
+        $form.validator().on("submit", function(event) {
+            if (event.isDefaultPrevented()) {
+                showFormError("Please fill out all required fields");
+            } else {
+                event.preventDefault();
+                submitContactForm();
             }
         });
-    }
 
-    function formSuccess() {
-        $("#contact-form")[0].reset();
-        submitMSG(true, "Thanks! Your message has been sent.");
-    }
-  
-    function formError() {
-        $("#contactForm").removeClass().addClass('shake animated').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-            $(this).removeClass();
-        });
-    }  
-  
-    function submitMSG(valid, msg) {
-        var msgClasses;
-        if(valid) {
-            msgClasses = "validation-success";
-        } else {
-            msgClasses = "validation-danger";
+        function submitContactForm() {
+            const formData = $form.serialize();
+            
+            $.ajax({
+                type: "POST",
+                url: "assets/php/form-contact.php",
+                data: formData,
+                success: function(response) {
+                    if (response === "success") {
+                        showFormSuccess();
+                    } else {
+                        showFormError(response);
+                    }
+                },
+                error: function() {
+                    showFormError("An error occurred. Please try again.");
+                }
+            });
         }
-        $("#validator-contact").removeClass().addClass(msgClasses).text(msg);
+
+        function showFormSuccess() {
+            $form[0].reset();
+            $("#form-success").show();
+            setTimeout(() => $("#form-success").hide(), 5000);
+        }
+
+        function showFormError(message) {
+            $form.removeClass().addClass('shake animated').one('animationend', function() {
+                $(this).removeClass();
+            });
+            $validatorContact.removeClass().addClass('validation-danger').text(message);
+        }
     }
-});
 
     /*-----------------------------------------------------------------
-      Contacts form - Fetch API or works with sparcecode 
+      Modern Contact Form (Fetch API fallback)
     -------------------------------------------------------------------*/
-document.getElementById('contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    fetch(this.action, {
-        method: 'POST',
-        body: new FormData(this),
-        headers: {
-            'Accept': 'application/json'
+    function initModernContactForm() {
+        const form = document.getElementById('contact-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('form-success').style.display = 'block';
+                    form.reset();
+                    setTimeout(() => {
+                        document.getElementById('form-success').style.display = 'none';
+                    }, 5000);
+                }
+            })
+            .catch(() => {
+                showFormError("Network error. Please try again.");
+            });
+        });
+    }
+
+    /*-----------------------------------------------------------------
+      Utility Functions
+    -------------------------------------------------------------------*/
+    function debounce(func, wait, immediate) {
+        let timeout;
+        return function() {
+            const context = this, args = arguments;
+            const later = function() {
+                timeout = null;
+                if (!immediate) func.apply(context, args);
+            };
+            const callNow = immediate && !timeout;
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+            if (callNow) func.apply(context, args);
+        };
+    }
+
+    /*-----------------------------------------------------------------
+      Main Initialization
+    -------------------------------------------------------------------*/
+    function initAll() {
+        initializePage();
+        initCarousels();
+        initStickySidebar();
+        initScrollIndicator();
+        initParallax();
+        initScrollToTop();
+        initTextareaResize();
+        initTabs();
+        initLazyLoad();
+        initObjectFit();
+        initContactForm();
+        initModernContactForm();
+
+        // Initialize Works tab if active
+        if ($('#works-tab').hasClass('active')) {
+            initWorksTab();
         }
-    }).then(response => {
-        if (response.ok) {
-            document.getElementById('form-success').style.display = 'block';
-            this.reset();
-            setTimeout(() => {
-                document.getElementById('form-success').style.display = 'none';
-            }, 5000);
-        }
-    });
+
+        // Handle window resize for zoom
+        $window.on('resize', debounce(function() {
+            if ($('#works-tab').hasClass('active')) {
+                initImageZoom();
+            }
+        }, 250));
+    }
+
+    // Start everything
+    initAll();
 });
