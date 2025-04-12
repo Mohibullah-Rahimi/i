@@ -2938,6 +2938,7 @@ button:focus {
   position: fixed;
   width: 100%;
 }
+
 /* Gallery Preloader Fix */
 .gallery-grid {
   opacity: 0;
@@ -2958,4 +2959,50 @@ button:focus {
 
 .gallery-grid.is-loaded .gallery-grid__item {
   visibility: visible;
+}
+
+/* Blog Post Styles */
+#single-post-container {
+  animation: fadeIn 0.3s ease;
+  padding: 20px 0;
+}
+
+#back-to-blog {
+  background: #4fc3f7;
+  color: #111;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+}
+
+#back-to-blog:hover {
+  background: #3da8d8;
+}
+
+#back-to-blog i {
+  margin-right: 8px;
+}
+
+.post-content {
+  padding: 20px;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 40px;
+  color: #4fc3f7;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }

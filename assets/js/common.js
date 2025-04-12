@@ -6,7 +6,7 @@
  * Optimized for performance and reliability
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
     'use strict';
 
     // Cache frequently used elements
@@ -20,7 +20,7 @@ $(document).ready(function() {
     -------------------------------------------------------------------*/
     const isMobile = /Android|webOS|iPhone|iPod|iPad|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     const isIE = /MSIE|Trident|Edge/.test(navigator.userAgent);
-    
+
     $html.addClass(isMobile ? 'touch' : 'no-touch');
 
     /*-----------------------------------------------------------------
@@ -120,9 +120,9 @@ $(document).ready(function() {
         function activateSticky() {
             $stickyColumn.stick_in_parent({
                 parent: $stickyParent
-            }).on('sticky_kit:bottom', function() {
+            }).on('sticky_kit:bottom', function () {
                 $(this).parent().css('position', 'static');
-            }).on('sticky_kit:unbottom', function() {
+            }).on('sticky_kit:unbottom', function () {
                 $(this).parent().css('position', 'relative');
             });
         }
@@ -160,22 +160,22 @@ $(document).ready(function() {
             triggerHook: 'onEnter',
             duration: 300
         })
-        .on("enter", function() {
-            $('.progress-bar').each(function() {
-                $(this).css({
-                    'width': $(this).attr('aria-valuenow') + '%',
-                    'z-index': '2'
+            .on("enter", function () {
+                $('.progress-bar').each(function () {
+                    $(this).css({
+                        'width': $(this).attr('aria-valuenow') + '%',
+                        'z-index': '2'
+                    });
                 });
-            });
-        })
-        .addTo(ctrl);
+            })
+            .addTo(ctrl);
     }
 
     /*-----------------------------------------------------------------
       Scroll Indicator
     -------------------------------------------------------------------*/
     function initScrollIndicator() {
-        $window.on('scroll', function() {
+        $window.on('scroll', function () {
             const scrollPercent = ($window.scrollTop() / ($document.height() - $window.height())) * 100;
             $('.scroll-line').css('width', scrollPercent + '%');
         });
@@ -201,13 +201,13 @@ $(document).ready(function() {
 
         $backToTop.hide();
 
-        $window.on('scroll', function() {
+        $window.on('scroll', function () {
             $backToTop.toggle($window.scrollTop() > showHeight);
         });
 
-        $backToTop.on('click', function(e) {
+        $backToTop.on('click', function (e) {
             e.preventDefault();
-            $('html, body').animate({scrollTop: 0}, 'slow');
+            $('html, body').animate({ scrollTop: 0 }, 'slow');
         });
     }
 
@@ -215,7 +215,7 @@ $(document).ready(function() {
       Auto-resize Textarea
     -------------------------------------------------------------------*/
     function initTextareaResize() {
-        $('textarea').each(function() {
+        $('textarea').each(function () {
             autosize(this);
         });
     }
@@ -231,23 +231,23 @@ $(document).ready(function() {
         // Hide all tabs except first
         $tabContents.hide().first().show();
 
-        $tabLinks.on('click', function(e) {
+        $tabLinks.on('click', function (e) {
             e.preventDefault();
-            
+
             // Update active tab
             $tabLinks.removeClass('active');
             $(this).addClass('active');
-            
+
             // Show selected content
             const currentTab = $(this).attr('href');
             $tabContents.hide();
             $(currentTab).show();
-            
+
             // Special handling for Works tab
             if (currentTab === '#works-tab') {
                 setTimeout(initWorksTab, 300);
             }
-            
+
             // Mobile behavior
             if ($window.width() < mobileBreakpoint) {
                 $('html, body').animate({
@@ -267,24 +267,24 @@ $(document).ready(function() {
         const $filterOption = $('.filter-option');
 
         // Mobile filter toggle
-        $selectHeader.on('click', function(e) {
+        $selectHeader.on('click', function (e) {
             e.stopPropagation();
             $filterOptions.toggleClass('show');
         });
 
         // Filter selection
-        $filterOption.on('click', function() {
+        $filterOption.on('click', function () {
             const filterValue = $(this).data('filter');
             $('.selected-option').text($(this).text());
             $filterOption.removeClass('active');
             $(this).addClass('active');
             $filterOptions.removeClass('show');
-            
+
             $gallery.isotope({ filter: filterValue });
         });
 
         // Close when clicking outside
-        $document.on('click', function() {
+        $document.on('click', function () {
             $filterOptions.removeClass('show');
         });
 
@@ -296,7 +296,7 @@ $(document).ready(function() {
         });
 
         // Layout after images load
-        $gallery.imagesLoaded().progress(function() {
+        $gallery.imagesLoaded().progress(function () {
             $gallery.isotope('layout').addClass('is-loaded');
         });
     }
@@ -309,13 +309,13 @@ $(document).ready(function() {
     function initImageZoom() {
         // Only initialize on desktop
         if ($window.width() <= 768) return;
-        
+
         // Clean up previous instance
         if (zoomInstance) {
             zoomInstance.detach();
             zoomInstance = null;
         }
-        
+
         // Initialize new zoom
         try {
             zoomInstance = mediumZoom('[data-zoom]', {
@@ -357,8 +357,8 @@ $(document).ready(function() {
     function initContactForm() {
         const $form = $("#contact-form");
         const $validatorContact = $("#validator-contact");
-        
-        $form.validator().on("submit", function(event) {
+
+        $form.validator().on("submit", function (event) {
             if (event.isDefaultPrevented()) {
                 showFormError("Please fill out all required fields");
             } else {
@@ -369,19 +369,19 @@ $(document).ready(function() {
 
         function submitContactForm() {
             const formData = $form.serialize();
-            
+
             $.ajax({
                 type: "POST",
                 url: "assets/php/form-contact.php",
                 data: formData,
-                success: function(response) {
+                success: function (response) {
                     if (response === "success") {
                         showFormSuccess();
                     } else {
                         showFormError(response);
                     }
                 },
-                error: function() {
+                error: function () {
                     showFormError("An error occurred. Please try again.");
                 }
             });
@@ -394,7 +394,7 @@ $(document).ready(function() {
         }
 
         function showFormError(message) {
-            $form.removeClass().addClass('shake animated').one('animationend', function() {
+            $form.removeClass().addClass('shake animated').one('animationend', function () {
                 $(this).removeClass();
             });
             $validatorContact.removeClass().addClass('validation-danger').text(message);
@@ -408,26 +408,26 @@ $(document).ready(function() {
         const form = document.getElementById('contact-form');
         if (!form) return;
 
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             fetch(this.action, {
                 method: 'POST',
                 body: new FormData(this),
                 headers: { 'Accept': 'application/json' }
             })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('form-success').style.display = 'block';
-                    form.reset();
-                    setTimeout(() => {
-                        document.getElementById('form-success').style.display = 'none';
-                    }, 5000);
-                }
-            })
-            .catch(() => {
-                showFormError("Network error. Please try again.");
-            });
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('form-success').style.display = 'block';
+                        form.reset();
+                        setTimeout(() => {
+                            document.getElementById('form-success').style.display = 'none';
+                        }, 5000);
+                    }
+                })
+                .catch(() => {
+                    showFormError("Network error. Please try again.");
+                });
         });
     }
 
@@ -436,9 +436,9 @@ $(document).ready(function() {
     -------------------------------------------------------------------*/
     function debounce(func, wait, immediate) {
         let timeout;
-        return function() {
+        return function () {
             const context = this, args = arguments;
-            const later = function() {
+            const later = function () {
                 timeout = null;
                 if (!immediate) func.apply(context, args);
             };
@@ -472,7 +472,7 @@ $(document).ready(function() {
         }
 
         // Handle window resize for zoom
-        $window.on('resize', debounce(function() {
+        $window.on('resize', debounce(function () {
             if ($('#works-tab').hasClass('active')) {
                 initImageZoom();
             }
@@ -481,4 +481,46 @@ $(document).ready(function() {
 
     // Start everything
     initAll();
+    /*-----------------------------------------------------------------
+  Blog Post Handling
+------------------------------------------------------------------*/
+    /*-----------------------------------------------------------------
+      Blog Post Handling
+    ------------------------------------------------------------------*/
+    function initBlogPosts() {
+        // Handle blog post clicks
+        $(document).on('click', '.load-blog-post', function (e) {
+            e.preventDefault();
+            const postUrl = $(this).data('post');
+            const postTitle = $(this).data('title');
+
+            // Show loading state
+            $('#blog-posts-container').hide();
+            $('#single-post-container').show();
+            $('#back-to-blog').show();
+            $('#single-post-container .post-content').html('<div class="loading-spinner">Loading post...</div>');
+
+            // Load the post content
+            $('#single-post-container .post-content').load(postUrl, function () {
+                // Update the page title
+                document.title = postTitle + " | Mohibullah Rahimi";
+
+                // Scroll to top of post
+                $('html, body').animate({
+                    scrollTop: $('#blog-tab').offset().top - 20
+                }, 300);
+            });
+        });
+
+        // Handle back button
+        $('#back-to-blog').on('click', function () {
+            $('#single-post-container').hide();
+            $('#blog-posts-container').show();
+            $(this).hide();
+            document.title = "Mohibullah Rahimi | Cloud & Network Engineer";
+        });
+    }
+
+    // Initialize blog posts when page loads
+    initBlogPosts();
 });
