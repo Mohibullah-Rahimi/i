@@ -190,7 +190,7 @@ def process_invoice(file_path):
     database = 'testdb' 
     
     def main():
-        connect_str = "DefaultEndpointsProtocol=https;AccountName=pgpccstorage;AccountKey=8i/BuorLbe21QKQcRzV8UuFEyMf/KT/Jbc21ab6Z9eb8Vu2A6clEfAOVirgC76spsbXudIcIE0Za+AStn9zh7w==;EndpointSuffix=core.windows.net"
+        connect_str = "Your_Connection_String_Here"
         # Create the BlobServiceClient object
         blob_service_client = BlobServiceClient.from_connection_string(connect_str)
         container_name = str(uuid.uuid4())
