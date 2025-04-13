@@ -1,0 +1,122 @@
+<div class="blog-post-content" style="max-width: 900px; margin: 0 auto; font-family: 'Segoe UI', Arial, sans-serif; color: #ffffff; line-height: 1.7; padding: 25px;">
+    <h1 style="color: #4da6ff; border-bottom: 2px solid #2a4d7a; padding-bottom: 12px; font-size: 2.2em;">Secure Enterprise File Sharing Solution on Azure</h1>
+    
+    <div style="color: #a0a0a0; font-size: 0.95em; margin-bottom: 35px; border-left: 3px solid #4da6ff; padding-left: 15px;">
+        <span style="display: block;">Published: January 2025</span>
+        <span style="display: block;">By: Mohibullah Rahimi</span>
+        <span style="display: block;">Technical Stack: Azure Virtual Network, Ubuntu VMs, MySQL, OwnCloud, Network Security Groups</span>
+    </div>
+
+    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Solution Architecture</h2>
+    
+    <div style="text-align: center; margin: 20px 0;">
+        <img src="assets/post2images/image6.png" alt="Virtual Network Configuration" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+        <p style="font-size: 0.9em; color: #a0a0a0; margin-top: 8px;">Figure 1: Virtual network configuration with address space 10.0.0.0/16</p>
+    </div>
+
+    <div style="margin-bottom: 30px;">
+        <h3 style="color: #4da6ff;">Network Segmentation Strategy</h3>
+        <p>This deployment follows a robust network segmentation model, isolating resources across subnets for enhanced security and manageability:</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+            <div>
+                <img src="assets/post2images/image8.png" alt="Private Subnet Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center;">Figure 2: Private subnet 10.0.2.0/24 configuration</p>
+            </div>
+            <div>
+                <h4 style="color: #4da6ff;">Key Design Decisions</h4>
+                <ul style="padding-left: 20px; list-style-type: square;">
+                    <li><strong>Public Subnet (10.0.1.0/24):</strong> Hosts the OwnCloud web application</li>
+                    <li><strong>Private Subnet (10.0.2.0/24):</strong> Contains the backend MySQL database</li>
+                    <li><strong>NAT Gateway:</strong> Ensures secure internet-bound access for private subnet resources</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Security Configuration</h2>
+
+    <div style="margin: 25px 0;">
+        <h3 style="color: #4da6ff;">Network Security Groups</h3>
+        <p>NSGs enforce the principle of least privilege, strictly controlling inbound and outbound traffic:</p>
+        
+        <img src="assets/post2images/image1.png" alt="NSG Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin: 15px 0;">
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+            <div>
+                <h4 style="color: #4da6ff;">AppNSG Rules</h4>
+                <ul style="padding-left: 20px; list-style-type: square;">
+                    <li>SSH (22) - Limited to jump host access only</li>
+                    <li>HTTP (80) - Standard web traffic</li>
+                    <li>HTTPS (443) - Encrypted traffic over TLS</li>
+                </ul>
+            </div>
+            <div>
+                <h4 style="color: #4da6ff;">DbNSG Rules</h4>
+                <ul style="padding-left: 20px; list-style-type: square;">
+                    <li>MySQL (3306) - Accessible only from AppNSG</li>
+                    <li>SSH (22) - Restricted to bastion host</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin: 25px 0;">
+        <h3 style="color: #4da6ff;">Secure Outbound Connectivity</h3>
+        <p>Outbound internet access for private VMs is routed via a NAT Gateway, which enhances both security and control:</p>
+        
+        <img src="assets/post2images/image2.png" alt="NAT Gateway Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin: 15px 0;">
+        
+        <ul style="padding-left: 25px; list-style-type: square;">
+            <li><strong>No Public IPs:</strong> Internal VMs operate without direct exposure to the internet</li>
+            <li><strong>Stateful Firewall:</strong> Enables return traffic for outbound sessions only</li>
+            <li><strong>Port Preservation:</strong> Maintains original source ports for compatibility and traceability</li>
+        </ul>
+    </div>
+
+    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Database Implementation</h2>
+
+    <div style="margin: 25px 0;">
+        <h3 style="color: #4da6ff;">MySQL Server Configuration</h3>
+        <p>The MySQL server was provisioned in the private subnet with performance and security in mind:</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
+            <div>
+                <img src="assets/post2images/image5.png" alt="Database Server Specs" style="width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center;">Figure 3: Database server specifications</p>
+            </div>
+            <div>
+                <img src="assets/post2images/image14.png" alt="MySQL Installation" style="width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center;">Figure 4: MySQL installation process</p>
+            </div>
+        </div>
+
+        <h4 style="color: #4da6ff;">Security Hardening Steps</h4>
+        <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; border-left: 3px solid #4da6ff; font-family: 'Courier New', monospace; color: #ffffff;">
+# MySQL secure installation
+sudo mysql_secure_installation
+# Removed anonymous users
+# Disabled remote root login
+# Removed test database
+
+# Application-specific user creation
+CREATE USER 'ownclouduser'@'10.0.1.%' IDENTIFIED BY 'ComplexP@ssw0rd!2025';
+GRANT SELECT, INSERT, UPDATE, DELETE ON owncloud.* TO 'ownclouduser'@'10.0.1.%';
+REVOKE ALL PRIVILEGES ON *.* FROM 'ownclouduser'@'10.0.1.%';</pre>
+    </div>
+
+    <div style="margin: 25px 0;">
+        <h3 style="color: #4da6ff;">Secure SSH Access</h3>
+        <p>Access to backend servers is tightly secured through a bastion host and key-based SSH authentication:</p>
+        
+        <img src="assets/post2images/image7.png" alt="SSH Access to Database" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin: 15px 0;">
+        
+        <ul style="padding-left: 25px; list-style-type: square;">
+            <li><strong>Key-Based Authentication:</strong> Disables password-based login to reduce brute-force risk</li>
+            <li><strong>Bastion Host Pattern:</strong> All SSH sessions are routed through a hardened jump server</li>
+            <li><strong>Permission Lockdown:</strong> File permissions for SSH keys are strictly enforced</li>
+        </ul>
+    </div>
+
+    <div style="margin: 25px 0; text-align: center;">
+        <h3 style="color: #4da6ff;">OwnCloud...
