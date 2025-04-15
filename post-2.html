@@ -55,21 +55,21 @@
         </div>
     </div>
 
-    <!-- Implementation Guide -->
-    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Implementation Guide</h2>
+<!-- Implementation Guide -->
+<h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Implementation Guide</h2>
 
-    <!-- Network Setup -->
-    <div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
-        <div style="background-color: #2a4d7a; padding: 15px 20px;">
-            <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Network Infrastructure Setup</h3>
-        </div>
-        <div style="padding: 20px;">
-            <h4 style="color: #4da6ff; margin-top: 0;">Virtual Network Creation</h4>
-            <p>Create the foundational network infrastructure with proper segmentation:</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
-                <div>
-                    <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 0;">
+<!-- Network Setup -->
+<div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
+    <div style="background-color: #2a4d7a; padding: 15px 20px;">
+        <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Network Infrastructure Setup</h3>
+    </div>
+    <div style="padding: 20px;">
+        <h4 style="color: #4da6ff; margin-top: 0;">Virtual Network Creation</h4>
+        <p>Create the foundational network infrastructure with proper segmentation:</p>
+        
+        <div style="margin: 15px 0;">
+            <div>
+                <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 0;">
 # Create resource group for all components
 az group create --name OwnCloud-RG --location eastus
 
@@ -92,19 +92,21 @@ az network vnet subnet create \
   --resource-group OwnCloud-RG \
   --vnet-name P1VNET \
   --address-prefixes 10.0.2.0/24</pre>
-                </div>
-                <div>
-                    <img src="assets/post2images/image6.png" alt="Virtual Network Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px;">
-                    <p style="font-size: 0.85em; color: #a0a0a0; text-align: center; margin-top: 8px;">Network topology after initial configuration</p>
-                </div>
             </div>
+            <div style="margin-top: 20px;">
+                <img src="assets/post2images/image6.png" alt="Virtual Network Configuration" style="width: 100%; max-width: 600px; border: 1px solid #444; border-radius: 4px; display: block; margin: 0 auto;">
+                <p style="font-size: 0.85em; color: #a0a0a0; text-align: center; margin-top: 8px;">Network topology after initial configuration</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <h4 style="color: #4da6ff; margin-top: 25px;">NAT Gateway Implementation</h4>
-            <p>Configure secure outbound connectivity for private subnet resources:</p>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
-                <div>
-                    <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 0;">
+<h4 style="color: #4da6ff; margin-top: 25px;">NAT Gateway Implementation</h4>
+<p>Configure secure outbound connectivity for private subnet resources:</p>
+
+<div style="margin: 15px 0;">
+    <div>
+        <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 0;">
 # Create public IP for NAT gateway
 az network public-ip create \
   --resource-group OwnCloud-RG \
@@ -124,14 +126,12 @@ az network vnet subnet update \
   --vnet-name P1VNET \
   --name private-subnet \
   --nat-gateway owncloud-nat</pre>
-                </div>
-                <div>
-                    <img src="assets/post2images/image2.png" alt="NAT Gateway Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px;">
-                    <p style="font-size: 0.85em; color: #a0a0a0; text-align: center; margin-top: 8px;">NAT gateway attached to private subnet</p>
-                </div>
-            </div>
-        </div>
     </div>
+    <div style="margin-top: 20px; text-align: center;">
+        <img src="assets/post2images/image2.png" alt="NAT Gateway Configuration" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+        <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">NAT gateway attached to private subnet</p>
+    </div>
+</div>
 
     <!-- Security Configuration -->
     <div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
@@ -238,16 +238,16 @@ az network nsg rule create \
         </div>
     </div>
 
-    <!-- Virtual Machine Deployment -->
-    <div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
-        <div style="background-color: #2a4d7a; padding: 15px 20px;">
-            <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Virtual Machine Deployment</h3>
-        </div>
-        <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 15px 0;">
-                <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
-                    <h4 style="color: #4da6ff; margin-top: 0;">Application Server Configuration</h4>
-                    <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
+   <!-- Virtual Machine Deployment -->
+<div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
+    <div style="background-color: #2a4d7a; padding: 15px 20px;">
+        <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Virtual Machine Deployment</h3>
+    </div>
+    <div style="padding: 20px;">
+        <!-- Application Server Section -->
+        <div style="background-color: #121212; padding: 20px; border-radius: 4px; margin-bottom: 25px;">
+            <h4 style="color: #4da6ff; margin-top: 0;">Application Server Configuration</h4>
+            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin-bottom: 20px;">
 # Deploy Ubuntu VM in public subnet
 az vm create \
   --name owncloud-app \
@@ -260,11 +260,16 @@ az vm create \
   --vnet-name P1VNET \
   --subnet public-subnet \
   --nsg AppNSG</pre>
-                    <img src="assets/post2images/image9.png" alt="Application Server Overview" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin-top: 15px;">
-                </div>
-                <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
-                    <h4 style="color: #4da6ff; margin-top: 0;">Database Server Configuration</h4>
-                    <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
+            <div style="text-align: center;">
+                <img src="assets/post2images/image9.png" alt="Application Server Overview" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">Application Server Overview</p>
+            </div>
+        </div>
+
+        <!-- Database Server Section -->
+        <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
+            <h4 style="color: #4da6ff; margin-top: 0;">Database Server Configuration</h4>
+            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin-bottom: 20px;">
 # Deploy Ubuntu VM in private subnet
 az vm create \
   --name owncloud-db \
@@ -277,22 +282,24 @@ az vm create \
   --vnet-name P1VNET \
   --subnet private-subnet \
   --nsg DbNSG</pre>
-                    <img src="assets/post2images/image5.png" alt="Database Server Overview" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin-top: 15px;">
-                </div>
+            <div style="text-align: center;">
+                <img src="assets/post2images/image5.png" alt="Database Server Overview" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">Database Server Overview</p>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Software Installation -->
-    <div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
-        <div style="background-color: #2a4d7a; padding: 15px 20px;">
-            <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Software Installation</h3>
-        </div>
-        <div style="padding: 20px;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 15px 0;">
-                <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
-                    <h4 style="color: #4da6ff; margin-top: 0;">MySQL Database Installation</h4>
-                    <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
+<!-- Software Installation -->
+<div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
+    <div style="background-color: #2a4d7a; padding: 15px 20px;">
+        <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Software Installation</h3>
+    </div>
+    <div style="padding: 20px;">
+        <!-- MySQL Database Installation Section -->
+        <div style="background-color: #121212; padding: 20px; border-radius: 4px; margin-bottom: 30px;">
+            <h4 style="color: #4da6ff; margin-top: 0;">MySQL Database Installation</h4>
+            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin-bottom: 20px; white-space: pre-wrap; word-wrap: break-word;">
 # Connect to database server via bastion
 ssh -i db-key.pem azureuser@10.0.2.4
 
@@ -314,11 +321,16 @@ CREATE USER 'ownclouduser'@'10.0.1.%' IDENTIFIED BY 'SecureP@ss123!';
 GRANT ALL PRIVILEGES ON owncloud.* TO 'ownclouduser'@'10.0.1.%';
 FLUSH PRIVILEGES;
 EXIT;</pre>
-                    <img src="assets/post2images/image14.png" alt="MySQL Installation Process" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin-top: 15px;">
-                </div>
-                <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
-                    <h4 style="color: #4da6ff; margin-top: 0;">OwnCloud Application Installation</h4>
-                    <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
+            <div style="text-align: center;">
+                <img src="assets/post2images/image14.png" alt="MySQL Installation Process" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">MySQL Installation Process</p>
+            </div>
+        </div>
+
+        <!-- OwnCloud Application Installation Section -->
+        <div style="background-color: #121212; padding: 20px; border-radius: 4px;">
+            <h4 style="color: #4da6ff; margin-top: 0;">OwnCloud Application Installation</h4>
+            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin-bottom: 20px; white-space: pre-wrap; word-wrap: break-word;">
 # Connect to application server
 ssh -i app-key.pem azureuser@<PUBLIC_IP>
 
@@ -339,11 +351,13 @@ sudo wget https://download.owncloud.com/server/stable/owncloud-complete-latest.t
 sudo tar -xjf owncloud-complete-latest.tar.bz2
 sudo chown -R www-data:www-data owncloud
 sudo systemctl restart apache2</pre>
-                    <img src="assets/post2images/image7.png" alt="OwnCloud Installation" style="width: 100%; border: 1px solid #444; border-radius: 4px; margin-top: 15px;">
-                </div>
+            <div style="text-align: center;">
+                <img src="assets/post2images/image7.png" alt="OwnCloud Installation" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">OwnCloud Installation</p>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Testing and Validation -->
     <div style="margin: 35px 0; background-color: #1a2a3a; padding: 30px; border-radius: 6px;">
