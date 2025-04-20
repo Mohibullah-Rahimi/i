@@ -351,71 +351,85 @@ $(document).ready(function () {
         objectFitImages($('img.cover'));
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        const contactForm = document.getElementById('contact-form');
-        const validatorContact = document.getElementById('validator-contact');
-        const formSuccess = document.getElementById('form-success');
-        const submitBtn = document.getElementById('submit-btn');
-    
-        contactForm.addEventListener('submit', function(e) {
+    /*-----------------------------------------------------------------
+      Contact Form
+    -------------------------------------------------------------------*/
+    function initContactForm() {
+        const $form = $("#contact-form");
+        const $validatorContact = $("#validator-contact");
+
+        $form.validator().on("submit", function (event) {
+            if (event.isDefaultPrevented()) {
+                showFormError("Please fill out all required fields");
+            } else {
+                event.preventDefault();
+                submitContactForm();
+            }
+        });
+
+        function submitContactForm() {
+            const formData = $form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: "assets/php/form-contact.php",
+                data: formData,
+                success: function (response) {
+                    if (response === "success") {
+                        showFormSuccess();
+                    } else {
+                        showFormError(response);
+                    }
+                },
+                error: function () {
+                    showFormError("An error occurred. Please try again.");
+                }
+            });
+        }
+
+        function showFormSuccess() {
+            $form[0].reset();
+            $("#form-success").show();
+            setTimeout(() => $("#form-success").hide(), 5000);
+        }
+
+        function showFormError(message) {
+            $form.removeClass().addClass('shake animated').one('animationend', function () {
+                $(this).removeClass();
+            });
+            $validatorContact.removeClass().addClass('validation-danger').text(message);
+        }
+    }
+
+    /*-----------------------------------------------------------------
+      Modern Contact Form (Fetch API fallback)
+    -------------------------------------------------------------------*/
+    function initModernContactForm() {
+        const form = document.getElementById('contact-form');
+        if (!form) return;
+
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             
-            // Clear previous messages
-            validatorContact.style.display = 'none';
-            formSuccess.style.display = 'none';
-            validatorContact.textContent = '';
-            
-            // Disable submit button and show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="font-icon icon-spinner spinner"></i> Sending...';
-    
-            // Create FormData object
-            const formData = new FormData(contactForm);
-            
-            // Add Formspree-specific fields
-            formData.append('_replyto', document.getElementById('emailContact').value);
-            formData.append('_subject', 'New message from your website');
-            formData.append('_format', 'plain');
-    
-            fetch('https://formspree.io/f/moveyppr', {
+            fetch(this.action, {
                 method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                },
-                mode: 'no-cors' // Important for Formspree to work without redirect
+                body: new FormData(this),
+                headers: { 'Accept': 'application/json' }
             })
-            .then(() => {
-                // Since we're using no-cors, we can't read the response
-                // But we'll assume it succeeded if we get here
-                formSuccess.style.display = 'block';
-                contactForm.reset();
-                
-                // Hide success message after 5 seconds
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('form-success').style.display = 'block';
+                        form.reset();
                 setTimeout(() => {
                     formSuccess.style.display = 'none';
                 }, 5000);
+                    }
             })
-            .catch(error => {
-                // Show error message
-                validatorContact.style.display = 'block';
-                validatorContact.textContent = 'An error occurred. Please try again.';
-                
-                // Add shake animation
-                contactForm.classList.add('shake');
-                setTimeout(() => {
-                    contactForm.classList.remove('shake');
-                }, 500);
-                
-                console.error('Error:', error);
-            })
-            .finally(() => {
-                // Re-enable submit button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="font-icon icon-send"></i> Send Message';
+                .catch(() => {
+                    showFormError("Network error. Please try again.");
             });
         });
-    });
+    }
 
     /*-----------------------------------------------------------------
       Utility Functions
