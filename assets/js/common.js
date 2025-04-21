@@ -382,7 +382,7 @@ $(document).ready(function () {
                     }
                 },
                 error: function () {
-                    showFormError("An error occurred. Please try again.");
+                    showFormError(".");   //An error occurred. Please try again
                 }
             });
         }
