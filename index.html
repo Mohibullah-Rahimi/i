@@ -47,6 +47,7 @@
 	<!-- Mapbox (Deferred) -->
 	<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css" media="print"
 		onload="this.media='all'">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 
 <body>
@@ -221,12 +222,12 @@
 										<div class="swiper-wrapper">
 											<!-- Item client -->
 											<div class="swiper-slide">
-												<a href="#"><img src="assets/img/logo-1.svg" alt="Client Logo 1"
+												<a href="#"><img src="assets/img/client-1.png" alt="Client Logo 1"
 														loading="lazy"></a>
 											</div>
 											<!-- Item client -->
 											<div class="swiper-slide">
-												<a href="#"><img src="assets/img/logo-2.svg" alt="Client Logo 2"
+												<a href="#"><img src="assets/img/client-2.png" alt="Client Logo 2"
 														loading="lazy"></a>
 											</div>
 										</div>
@@ -479,7 +480,7 @@
 								<div class="pb-2">
 									<h1 class="title title--h1 first-title title__separate">Portfolio</h1>
 								</div>
-
+							
 								<!-- Filter - Fixed Mobile Version -->
 								<div class="portfolio-filter">
 									<div class="filter-select">
@@ -489,173 +490,186 @@
 										</div>
 										<ul class="filter-options">
 											<li class="filter-option active" data-filter="*">All</li>
-											<li class="filter-option" data-filter=".category-certificates">Certificates
-											</li>
+											<li class="filter-option" data-filter=".category-certificates">Certificates</li>
 											<li class="filter-option" data-filter=".category-projects">Projects</li>
 										</ul>
 									</div>
 								</div>
-
+							
 								<!-- Gallery -->
 								<div class="gallery-grid js-grid-row js-filter-container">
 									<div class="gutter-sizer"></div>
-
-									<!-- Item 1 -->
+							
+									<!-- AWS Solution Architect -->
+									<figure class="gallery-grid__item category-certificates">
+										<div class="gallery-grid__image-wrap">
+											<img class="gallery-grid__image cover lazyload"
+												src="assets/works-images/aws.jpg" data-zoom
+												alt="AWS Solution Architect" loading="lazy">
+											<a href="https://www.credly.com/badges/556c9b5a-7ecb-4748-9749-4af7d8f72ac4/linked_in_profile" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
+										</div>
+										<figcaption class="gallery-grid__caption">
+											<h4 class="title title--h6 gallery-grid__title">AWS Solution Architect</h4>
+											<span class="gallery-grid__category">Certificate</span>
+										</figcaption>
+									</figure>
+							
+									<!-- Managed Services on AWS and DevOps -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/manage-services-on-aws.jpg" data-zoom
 												alt="Managed Services on AWS and DevOps" loading="lazy">
+											<a href="https://www.mygreatlearning.com/certificate/JPOOSPRU" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Managed Services on AWS and
-												DevOps</h4>
+											<h4 class="title title--h6 gallery-grid__title">Managed Services on AWS and DevOps</h4>
 											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
-
-									<!-- Item 2 -->
+							
+									<!-- Managed Services on Azure -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/managed-services-azure.jpg" data-zoom
 												alt="Managed Services on Azure" loading="lazy">
+											<a href="https://www.mygreatlearning.com/certificate/LHQONHTQ" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Managed Services on Azure
-											</h4>
-											<span class="gallery-grid__category">Certificates</span>
+											<h4 class="title title--h6 gallery-grid__title">Managed Services on Azure</h4>
+											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
+							
+									<!-- Cloud Foundations -->
+									<figure class="gallery-grid__item category-certificates">
+										<div class="gallery-grid__image-wrap">
+											<img class="gallery-grid__image cover lazyload"
+												src="assets/works-images/cloud-foundation.jpg" data-zoom
+												alt="Cloud Foundations" loading="lazy">
+											<a href="https://www.mygreatlearning.com/certificate/FSBVUOVI" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
+										</div>
+										<figcaption class="gallery-grid__caption">
+											<h4 class="title title--h6 gallery-grid__title">Cloud Foundations</h4>
+											<span class="gallery-grid__category">Certificate</span>
+										</figcaption>
+									</figure>
+							
+									<!-- Cloud Computing on AWS -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/cloud-on-aws.jpg" data-zoom
 												alt="Cloud Computing on AWS" loading="lazy">
+											<a href="https://www.mygreatlearning.com/certificate/BWMBDCHP" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
 											<h4 class="title title--h6 gallery-grid__title">Cloud Computing on AWS</h4>
-											<span class="gallery-grid__category">Certificates</span>
+											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
-
-									<!-- Item 3 -->
-
-									<figure class="gallery-grid__item category-certificates">
-										<div class="gallery-grid__image-wrap">
-											<img class="gallery-grid__image cover lazyload"
-												src="assets/works-images/cloud-foundation.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
-										</div>
-										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Cloud Foundations</h4>
-											<span class="gallery-grid__category">Certificates</span>
-										</figcaption>
-									</figure>
-
-									<!-- Item 4 -->
-									<figure class="gallery-grid__item category-certificates">
-										<div class="gallery-grid__image-wrap">
-											<img class="gallery-grid__image cover lazyload"
-												src="assets/works-images/google.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
-										</div>
-										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Google IT Support</h4>
-											<span class="gallery-grid__category">Certificates</span>
-										</figcaption>
-									</figure>
-
-
-
-
-
-
-
-
-									<!-- Item 4 -->
-
+							
+									<!-- Version Control: Git&Github -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/version.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
+												alt="Version Control: Git&Github" loading="lazy">
+											<a href="https://coursera.org/share/c8ba0045b9bcc90443b9209dfa3f75f5" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Version Control: Git&Github
-											</h4>
-											<span class="gallery-grid__category">Certificates</span>
+											<h4 class="title title--h6 gallery-grid__title">Version Control: Git&Github</h4>
+											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
-
-									<!-- Item 5 -->
+							
+									<!-- Advanced React -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/react.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
+												alt="Advanced React" loading="lazy">
+											<a href="https://www.coursera.org/account/accomplishments/verify/LHHVVXDBNWQX" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
 											<h4 class="title title--h6 gallery-grid__title">Advanced React</h4>
-											<span class="gallery-grid__category">Certificates</span>
+											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
-
-
-									<!-- Item 6 -->
-									<figure class="gallery-grid__item category-certificates">
-										<div class="gallery-grid__image-wrap">
-											<img class="gallery-grid__image cover lazyload"
-												src="assets/works-images/react.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
-										</div>
-										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Advanced React</h4>
-											<span class="gallery-grid__category">Certificates</span>
-										</figcaption>
-									</figure>
-
-
-
-									<!-- Item 6 -->
+							
+									<!-- Programming with JavaScript -->
 									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
 												src="assets/works-images/javascript.jpg" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
+												alt="Programming with JavaScript" loading="lazy">
+											<a href="https://shorturl.at/sk81y" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Programming wiht javascript
-											</h4>
-											<span class="gallery-grid__category">Certificates</span>
+											<h4 class="title title--h6 gallery-grid__title">Programming with JavaScript</h4>
+											<span class="gallery-grid__category">Certificate</span>
 										</figcaption>
 									</figure>
-
-
-									<!-- Item Projects 
-
-
-									<figure class="gallery-grid__item category-projects">
+							
+									<!-- Google IT Support -->
+									<figure class="gallery-grid__item category-certificates">
 										<div class="gallery-grid__image-wrap">
 											<img class="gallery-grid__image cover lazyload"
-												src="assets/works-images/" data-zoom
-												alt="Cloud Computing on AWS" loading="lazy">
+												src="assets/works-images/google.jpg" data-zoom
+												alt="Google IT Support" loading="lazy">
+											<a href="https://www.coursera.org/account/accomplishments/specialization/Z2TPLUP9PJU5" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
 										</div>
 										<figcaption class="gallery-grid__caption">
-											<h4 class="title title--h6 gallery-grid__title">Cloud Computing on AWS</h4>
+											<h4 class="title title--h6 gallery-grid__title">Google IT Support</h4>
+											<span class="gallery-grid__category">Certificate</span>
+										</figcaption>
+									</figure>
+							
+									<!-- Leadership and Management -->
+									<figure class="gallery-grid__item category-certificates">
+										<div class="gallery-grid__image-wrap">
+											<img class="gallery-grid__image cover lazyload"
+												src="assets/works-images/agakhan.jpg" data-zoom
+												alt="Leadership and Management" loading="lazy">
+											<a href="https://drive.google.com/file/d/1brZwGI8rWQFmUN8GzGUsLGL1cKbGaLOl/view" target="_blank" rel="noopener noreferrer" class="certificate-link">
+												<i class="fas fa-external-link-alt"></i> Verify
+											</a>
+										</div>
+										<figcaption class="gallery-grid__caption">
+											<h4 class="title title--h6 gallery-grid__title">Leadership and Management</h4>
+											<span class="gallery-grid__category">Certificate</span>
+										</figcaption>
+									</figure>
+							
+									<!-- Coming Soon Project -->
+									<figure class="gallery-grid__item category-projects">
+										<div class="gallery-grid__image-wrap">
+											<!-- Placeholder for project image -->
+										</div>
+										<figcaption class="gallery-grid__caption">
+											<h4 class="title title--h6 gallery-grid__title">Coming soon...</h4>
 											<span class="gallery-grid__category">Projects</span>
 										</figcaption>
 									</figure>
-
-
-
-									 Item Projects  
-							
-									More here
-
-									
-								-->
-
 								</div>
 							</div>
 
