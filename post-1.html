@@ -40,8 +40,45 @@
             <li><strong>Monitoring:</strong> Azure Metrics for tracking pipeline execution and resource utilization</li>
         </ul>
     </div>
-
     <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Detailed Architecture</h2>
+    <div style="margin: 25px 0;">
+        <h3 style="color: #4da6ff; margin-top: 0;">Resource Group and Blob Storage Configuration</h3>
+        <p>The Azure storage infrastructure was deployed with these production-grade parameters:</p>
+        <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; border-left: 3px solid #4da6ff; font-family: 'Courier New', monospace; color: #ffffff;">
+    # Azure CLI commands for resource creation
+    az group create \
+    --name MyResourceGroup \
+    --location eastus
+    
+    az storage account create \
+    --name mystorageaccount \
+    --resource-group MyResourceGroup \
+    --location eastus \
+    --sku Standard_RAGRS \
+    --kind StorageV2</pre>
+        
+        <ul style="padding-left: 25px; list-style-type: square;">
+            <li><strong>Resource Group:</strong> Logical container for all project resources in East US region</li>
+            <li><strong>Storage Account:</strong> Standard geo-redundant storage (RA-GRS) for high availability</li>
+            <li><strong>Security:</strong> Access keys protected with RBAC and key rotation</li>
+            <li><strong>Connectivity:</strong> Connection strings for secure application integration</li>
+        </ul>
+        
+        <img src="assets/blogimages/image5.png" alt="Azure Storage Account configuration in portal" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 3: Storage account creation and access keys configuration in Azure portal</p>
+        
+        <div style="background-color: #121212; padding: 15px; border-radius: 4px; margin-top: 20px; border-left: 3px solid #4da6ff;">
+            <p style="color: #ffffff; margin: 0;"><strong>Implementation Notes:</strong></p>
+            <ol style="color: #ffffff; padding-left: 25px;">
+                <li>All resources deployed to the same resource group for unified management</li>
+                <li>Storage account name must be globally unique across all Azure</li>
+                <li>Connection string should be stored securely (Key Vault recommended)</li>
+                <li>RA-GRS provides read access to secondary location for disaster recovery</li>
+            </ol>
+        </div>
+    </div>
+
+  
     
     <div style="margin: 25px 0;">
         <h3 style="color: #4da6ff; margin-top: 0;">Compute Layer Specifications</h3>
