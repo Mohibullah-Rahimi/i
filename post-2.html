@@ -47,14 +47,7 @@
                 <li>Comprehensive logging and monitoring capabilities</li>
             </ul>
             
-            <!-- Image placed below text content -->
-            <div style="margin-top: 25px; text-align: center;">
-                <img src="assets/post2images/image9.jpg" alt="Network Architecture Diagram" 
-                     style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
-                <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">
-                    Network architecture diagram showing public/private subnet configuration
-                </p>
-            </div>
+        
         </div>
     </div>
 
@@ -96,12 +89,33 @@ az network vnet subnet create \
   --vnet-name P1VNET \
   --address-prefixes 10.0.2.0/24</pre>
             </div>
-            <div style="margin-top: 20px;">
-                <img src="assets/post2images/image6.png" alt="Virtual Network Configuration" style="width: 100%; max-width: 600px; border: 1px solid #444; border-radius: 4px; display: block; margin: 0 auto;">
-                <p style="font-size: 0.85em; color: #a0a0a0; text-align: center; margin-top: 8px;">Network topology after initial configuration</p>
-            </div>
+           
         </div>
+   
     </div>
+    <div style="margin-top: 20px;">
+        <img src="assets/post2images/image6.png" alt="Virtual Network Configuration" style="width: 100%; max-width: 920px; border: 1px solid #444; border-radius: 4px; display: block; margin: 0 auto;">
+        <p style="font-size: 0.85em; color: #a0a0a0; text-align: center; margin-top: 8px;">Network topology after initial configuration</p>
+    </div>
+</div>
+
+<!-- Image placed below text content -->
+<!-- Image placed below text content -->
+<div style="margin-top: 25px; text-align: center;">
+    <img src="assets/post2images/image12.png" alt="Network Architecture Diagram" 
+         style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+    <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">
+        Properties of public subnet
+
+
+</div>
+<!-- Image placed below text content -->
+<div style="margin-top: 25px; text-align: center;">
+    <img src="assets/post2images/image8.png" alt="Network Architecture Diagram" 
+         style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+    <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">
+        Properties of private subnet
+    </p>
 </div>
 
 <h4 style="color: #4da6ff; margin-top: 25px;">NAT Gateway Implementation</h4>
@@ -145,10 +159,7 @@ az network vnet subnet update \
             <h4 style="color: #4da6ff; margin-top: 0;">Network Security Groups</h4>
             <p>Implement granular access controls through NSG rules:</p>
             
-            <div style="margin: 20px 0;">
-                <img src="assets/post2images/image1.png" alt="NSG Rules Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center; margin-top: 10px;">Figure 3: Complete NSG rules configuration for both subnets</p>
-            </div>
+          
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin: 20px 0;">
                 <div>
@@ -236,9 +247,20 @@ az network nsg rule create \
   --source-port-range '*' \
   --destination-address-prefix '*' \
   --destination-port-range 22</pre>
+
+  
                 </div>
             </div>
+            <div style="margin: 20px 0;">
+                <img src="assets/post2images/image1.png" alt="NSG Rules Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center; margin-top: 10px;">DbNSG security rules configuration for both subnets</p>
+            </div>
+            <div style="margin: 20px 0;">
+                <img src="assets/post2images/image13.png" alt="NSG Rules Configuration" style="width: 100%; border: 1px solid #444; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                <p style="font-size: 0.9em; color: #a0a0a0; text-align: center; margin-top: 10px;">Complete AppNSG security rules configuration for subnets</p>
+            </div>
         </div>
+        
     </div>
 
    <!-- Virtual Machine Deployment -->
@@ -264,7 +286,7 @@ az vm create \
   --subnet public-subnet \
   --nsg AppNSG</pre>
             <div style="text-align: center;">
-                <img src="assets/post2images/image9.png" alt="Application Server Overview" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <img src="assets/post2images/image10.png" alt="Application Server Overview" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">Application Server Overview</p>
             </div>
         </div>
@@ -301,7 +323,7 @@ az vm create \
     <div style="padding: 20px;">
         <!-- MySQL Database Installation Section -->
         <div style="background-color: #121212; padding: 20px; border-radius: 4px; margin-bottom: 30px;">
-            <h4 style="color: #4da6ff; margin-top: 0;">MySQL Database Installation</h4>
+            <h4 style="color: #4da6ff; margin-top: 0;">Application and Database Installation and Testing</h4>
             <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin-bottom: 20px; white-space: pre-wrap; word-wrap: break-word;">
 # Connect to database server via bastion
 ssh -i db-key.pem azureuser@10.0.2.4
@@ -324,8 +346,13 @@ CREATE USER 'ownclouduser'@'10.0.1.%' IDENTIFIED BY 'SecureP@ss123!';
 GRANT ALL PRIVILEGES ON owncloud.* TO 'ownclouduser'@'10.0.1.%';
 FLUSH PRIVILEGES;
 EXIT;</pre>
+
+<div style="text-align: center;">
+    <img src="assets/post2images/image4.png" alt="MySQL Installation Process" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+    <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;"> </p>
+</div>
             <div style="text-align: center;">
-                <img src="assets/post2images/image14.png" alt="MySQL Installation Process" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+                <img src="assets/post2images/image3.png" alt="MySQL Installation Process" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">MySQL Installation Process</p>
             </div>
         </div>
@@ -355,7 +382,7 @@ sudo tar -xjf owncloud-complete-latest.tar.bz2
 sudo chown -R www-data:www-data owncloud
 sudo systemctl restart apache2</pre>
             <div style="text-align: center;">
-                <img src="assets/post2images/image7.png" alt="OwnCloud Installation" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
+                <img src="assets/post2images/image14.png" alt="OwnCloud Installation" style="max-width: 100%; height: auto; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0; margin-top: 8px;">OwnCloud Installation</p>
             </div>
         </div>
