@@ -138,9 +138,87 @@ scp -i "D:\PGPCC_project\projectfiles\Mohibullah-VM_key.pem" `
 scp -i "D:\PGPCC_project\projectfiles\Mohibullah-VM_key.pem" `
     D:\PGPCC_project\projectfiles\docproc-invoice.txt `
     ubuntu@20.169.249.44:/home/ubuntu/</pre>
-        <img src="assets/blogimages/image8.png" alt="SCP file transfer execution in PowerShell" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 3: Successful file transfer confirmation showing both files copied to VM</p>
         
+ 
+        <div style="margin: 25px 0;">
+            <h3 style="color: #4da6ff; margin-top: 0;">2. Python Processing Script</h3>
+            <p>The transformation script performs these key operations:</p>
+            <ol style="padding-left: 25px;">
+                <li>Reads and parses the tab-delimited text file</li>
+                <li>Converts to structured DataFrame with data type validation</li>
+                <li>Generates CSV output with proper header row</li>
+                <li>Uploads to Azure Blob Storage with unique container name</li>
+                <li>Performs batch inserts into MySQL database</li>
+            </ol>
+            
+            <h4 style="color: #4da6ff; margin-top: 20px;">Implementation Code</h4>
+            <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; border-left: 3px solid #4da6ff; font-family: 'Courier New', monospace; color: #ffffff;">
+        import mysql.connector
+        import pandas as pd
+        import os, uuid
+        from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
+        import csv
+        
+        hostname = 'greatlearningprojectdb.mysql.database.azure.com'
+        username = 'hajar@greatlearningprojectdb.mysql.database.azure.com'
+        password = 'Mohibjan@123'
+        database = 'testdb' 
+        
+        def main():
+            connect_str = "Your_Connection_String_Here"
+            # Create the BlobServiceClient object
+            blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+            container_name = str(uuid.uuid4())
+            container_client = blob_service_client.create_container(container_name)
+            
+            print('*********************** Processing File *****************************')
+            read_file = pd.read_csv(r'./docproc-invoice.txt')
+            read_file.to_csv(r'./docproc.csv', index=None)
+            print('File has been processed')
+            
+            upload_file_path = os.path.join("./", "docproc.csv")
+            blob_client = blob_service_client.get_blob_client(container=container_name, blob="docproc.csv")
+            print("\nUploading to Azure Storage as blob: docproc.csv")
+            with open(upload_file_path, "rb") as data:
+                blob_client.upload_blob(data)
+        
+            data = pd.read_csv("./docproc.csv")
+            cust_id = data.iloc[0,0]
+            inv_id = data.iloc[1,0]
+            print(cust_id)
+            print(inv_id)
+        
+            print('\n*************************************************************************')
+            print('Creating table invoice')
+            conn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=database)
+            cur = conn.cursor()
+            cur.execute("CREATE TABLE IF NOT EXISTS invoice (cust_id VARCHAR(255), inv_id VARCHAR(255))")
+            print('Inserting data into database')
+            sql = "INSERT INTO invoice VALUES (%s, %s)"
+            val = (cust_id, inv_id)
+            cur.execute(sql, val)
+            conn.commit()
+            cur.close()
+            conn.close()
+        
+        if __name__ == "__main__":
+            main()</pre>
+            <img src="assets/blogimages/image3.png" alt="Python script execution output" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
+            <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 6: Script execution showing file processing and database operations</p>
+            <img src="assets/blogimages/image8.png" alt="SCP file transfer execution in PowerShell" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 3: Successful file transfer confirmation showing both files copied to VM</p>
+
+            <h4 style="color: #4da6ff; margin-top: 20px;">Key Functionality Explained</h4>
+            <ul style="padding-left: 25px; list-style-type: square;">
+                <li><strong>Azure Blob Storage Integration:</strong> Creates unique container for each run and uploads processed CSV</li>
+                <li><strong>Data Processing:</strong> Reads tab-delimited text file and converts to CSV format</li>
+                <li><strong>Database Operations:</strong> Creates invoice table if not exists and inserts extracted values</li>
+                <li><strong>Security Note:</strong> In production, credentials would be managed through Azure Key Vault</li>
+            </ul>
+        
+            
+        </div>
+      
         <h4 style="color: #4da6ff; margin-top: 20px;">Key Security Considerations</h4>
         <ul style="padding-left: 25px; list-style-type: square;">
             <li>Private key stored in secure location with restricted permissions (600)</li>
@@ -217,81 +295,7 @@ def process_invoice(file_path):
             <li>DateTime format conversions</li>
         </ul>
     </div>
-    <div style="margin: 25px 0;">
-        <h3 style="color: #4da6ff; margin-top: 0;">3. Python Processing Script</h3>
-        <p>The transformation script performs these key operations:</p>
-        <ol style="padding-left: 25px;">
-            <li>Reads and parses the tab-delimited text file</li>
-            <li>Converts to structured DataFrame with data type validation</li>
-            <li>Generates CSV output with proper header row</li>
-            <li>Uploads to Azure Blob Storage with unique container name</li>
-            <li>Performs batch inserts into MySQL database</li>
-        </ol>
-        
-        <h4 style="color: #4da6ff; margin-top: 20px;">Implementation Code</h4>
-        <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; border-left: 3px solid #4da6ff; font-family: 'Courier New', monospace; color: #ffffff;">
-    import mysql.connector
-    import pandas as pd
-    import os, uuid
-    from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient, __version__
-    import csv
-    
-    hostname = 'greatlearningprojectdb.mysql.database.azure.com'
-    username = 'hajar@greatlearningprojectdb.mysql.database.azure.com'
-    password = 'Mohibjan@123'
-    database = 'testdb' 
-    
-    def main():
-        connect_str = "Your_Connection_String_Here"
-        # Create the BlobServiceClient object
-        blob_service_client = BlobServiceClient.from_connection_string(connect_str)
-        container_name = str(uuid.uuid4())
-        container_client = blob_service_client.create_container(container_name)
-        
-        print('*********************** Processing File *****************************')
-        read_file = pd.read_csv(r'./docproc-invoice.txt')
-        read_file.to_csv(r'./docproc.csv', index=None)
-        print('File has been processed')
-        
-        upload_file_path = os.path.join("./", "docproc.csv")
-        blob_client = blob_service_client.get_blob_client(container=container_name, blob="docproc.csv")
-        print("\nUploading to Azure Storage as blob: docproc.csv")
-        with open(upload_file_path, "rb") as data:
-            blob_client.upload_blob(data)
-    
-        data = pd.read_csv("./docproc.csv")
-        cust_id = data.iloc[0,0]
-        inv_id = data.iloc[1,0]
-        print(cust_id)
-        print(inv_id)
-    
-        print('\n*************************************************************************')
-        print('Creating table invoice')
-        conn = mysql.connector.connect(host=hostname, user=username, passwd=password, db=database)
-        cur = conn.cursor()
-        cur.execute("CREATE TABLE IF NOT EXISTS invoice (cust_id VARCHAR(255), inv_id VARCHAR(255))")
-        print('Inserting data into database')
-        sql = "INSERT INTO invoice VALUES (%s, %s)"
-        val = (cust_id, inv_id)
-        cur.execute(sql, val)
-        conn.commit()
-        cur.close()
-        conn.close()
-    
-    if __name__ == "__main__":
-        main()</pre>
-    
-        <h4 style="color: #4da6ff; margin-top: 20px;">Key Functionality Explained</h4>
-        <ul style="padding-left: 25px; list-style-type: square;">
-            <li><strong>Azure Blob Storage Integration:</strong> Creates unique container for each run and uploads processed CSV</li>
-            <li><strong>Data Processing:</strong> Reads tab-delimited text file and converts to CSV format</li>
-            <li><strong>Database Operations:</strong> Creates invoice table if not exists and inserts extracted values</li>
-            <li><strong>Security Note:</strong> In production, credentials would be managed through Azure Key Vault</li>
-        </ul>
-    
-        <img src="assets/blogimages/image3.png" alt="Python script execution output" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 6: Script execution showing file processing and database operations</p>
-    </div>
+   
     <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Execution Results and Validation</h2>
 
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0;">
