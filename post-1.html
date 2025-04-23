@@ -28,7 +28,7 @@
         <div style="text-align: center; margin: 20px 0;">
             <img src="assets/blogimages/image4.png" alt="Azure Data Pipeline Architecture Diagram" 
                  style="max-width: 100%; border: 1px solid #444; border-radius: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
-            <p style="font-size: 0.9em; color: #a0a0a0; margin-top: 8px;">Figure 1: Architecture diagram of the Azure data processing pipeline</p>
+            <p style="font-size: 0.9em; color: #a0a0a0; margin-top: 8px;">Architecture diagram of the Azure data processing pipeline</p>
         </div>
     </div>
         
@@ -65,7 +65,7 @@
         </ul>
         
         <img src="assets/blogimages/image5.png" alt="Azure Storage Account configuration in portal" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 3: Storage account creation and access keys configuration in Azure portal</p>
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Storage account creation and access keys configuration in Azure portal</p>
         
         <div style="background-color: #121212; padding: 15px; border-radius: 4px; margin-top: 20px; border-left: 3px solid #4da6ff;">
             <p style="color: #ffffff; margin: 0;"><strong>Implementation Notes:</strong></p>
@@ -90,7 +90,7 @@
             <li><strong>Network:</strong> NSG rules limiting inbound access to port 22 from approved IP ranges</li>
         </ul>
         <img src="assets/blogimages/image6.png" alt="Azure VM configuration details" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 1: Virtual machine configuration showing compute specifications and network settings</p>
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Virtual machine configuration showing compute specifications and network settings</p>
     </div>
 
     <div style="margin: 25px 0;">
@@ -116,7 +116,7 @@ az mysql flexible-server create \
             <li><strong>Backup:</strong> 7-day retention with point-in-time recovery capability</li>
         </ul>
         <img src="assets/blogimages/image10.png" alt="MySQL server configuration in Azure portal" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 2: MySQL flexible server dashboard showing connection endpoints and performance metrics</p>
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">MySQL flexible server dashboard showing connection endpoints and performance metrics</p>
     </div>
 
     <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Implementation Deep Dive</h2>
@@ -204,9 +204,9 @@ scp -i "D:\PGPCC_project\projectfiles\Mohibullah-VM_key.pem" `
         if __name__ == "__main__":
             main()</pre>
             <img src="assets/blogimages/image3.png" alt="Python script execution output" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-            <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 6: Script execution showing file processing and database operations</p>
+            <p style="font-size: 0.9em; color: #aaa; text-align: center;">Script execution showing file processing and database operations</p>
             <img src="assets/blogimages/image8.png" alt="SCP file transfer execution in PowerShell" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 3: Successful file transfer confirmation showing both files copied to VM</p>
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Successful file transfer confirmation showing both files copied to VM</p>
 
             <h4 style="color: #4da6ff; margin-top: 20px;">Key Functionality Explained</h4>
             <ul style="padding-left: 25px; list-style-type: square;">
@@ -257,7 +257,7 @@ Query OK, 1 row affected (0.12 sec)
 MySQL> USE testdb;
 Database changed</pre>
         <img src="assets/blogimages/image2.png" alt="MySQL command line showing database creation" style="width: 100%; border: 1px solid #444; margin: 15px 0;">
-        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Figure 4: Database creation process with verification of successful execution</p>
+        <p style="font-size: 0.9em; color: #aaa; text-align: center;">Database creation process with verification of successful execution</p>
         
         <h4 style="color: #4da6ff; margin-top: 20px;">Schema Design Considerations</h4>
         <ul style="padding-left: 25px; list-style-type: square;">
@@ -301,7 +301,7 @@ def process_invoice(file_path):
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 25px 0;">
         <div>
             <h3 style="color: #4da6ff; margin-top: 0;">Blob Storage Output</h3>
-            <img src="assets/blogimages/image9.png" alt="CSV file in blob storage" style="width: 100%; border: 1px solid #444;">
+           
             <p>Key characteristics:</p>
             <ul style="padding-left: 20px; list-style-type: square;">
                 <li>File size: 251KB (compressed)</li>
@@ -310,6 +310,7 @@ def process_invoice(file_path):
                 <li>Redundancy: Geo-redundant (RA-GRS)</li>
             </ul>
         </div>
+       
         <div>
             <h3 style="color: #4da6ff; margin-top: 0;">Database Records</h3>
           
@@ -321,6 +322,7 @@ def process_invoice(file_path):
                 <li>Data consistency validated with checksums</li>
             </ul>
         </div>
+        <img src="assets/blogimages/image9.png" alt="CSV file in blob storage" style="width: 100%; border: 1px solid #444;">
     </div>
 
     <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Lessons Learned and Best Practices</h2>
