@@ -10,7 +10,7 @@
     <!-- Enhanced Problem Statement -->
     <div style="background-color: #1a2a3a; padding: 25px; border-radius: 6px; margin-bottom: 30px; border-left: 4px solid #ff6b6b;">
         <h2 style="color: #ff6b6b; margin-top: 0; font-size: 1.8em;">The Evolution of Lambda: Why Containers Matter</h2>
-        <p>While AWS Lambda traditionally used ZIP deployments, container support (introduced in 2020) revolutionized serverless development by addressing key limitations:</p>
+        <p>The addition of Lambda support for OCI container images offers customers greater flexibility in packaging formats. Developers can now leverage the event-driven runtime model and cost efficiency of AWS Lambda while maintaining the predictability and control of a container-based development and deployment workflow.</p>
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
             <div>
@@ -38,147 +38,50 @@
         </div>
     </div>
 
-    <!-- Enhanced Architecture Section -->
-    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Architecture Deep Dive</h2>
+    <!-- Architecture Section -->
+    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Implementation Architecture</h2>
     
     <div style="text-align: center; margin: 25px 0;">
         <img src="assets/post-4images/image5.png" alt="Lambda Container Architecture Diagram" style="max-width: 100%; border: 1px solid #444; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
         <p style="font-size: 0.9em; color: #a0a0a0; margin-top: 12px;">End-to-end workflow from development to production</p>
     </div>
 
-    <div style="margin-bottom: 35px;">
-        <h3 style="color: #4da6ff; font-size: 1.4em;">Key Components Explained</h3>
-        
-        <div style="background-color: #121212; padding: 20px; border-radius: 6px; margin: 20px 0;">
-            <h4 style="color: #4da6ff; margin-top: 0;">1. The Dockerfile</h4>
-            <p>Your Dockerfile defines the execution environment. For Lambda:</p>
-            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 15px 0;">
-# Sample Lambda-compatible Dockerfile
-FROM public.ecr.aws/lambda/python:3.9
-
-# Install system dependencies
-RUN yum install -y gcc python3-devel
-
-# Copy requirements first for layer caching
-COPY requirements.txt .
-RUN pip install -r requirements.txt
-
-# Copy application code
-COPY app.py .
-
-# Set the Lambda handler
-CMD ["app.lambda_handler"]</pre>
-            
-            <div style="text-align: center; margin: 20px 0;">
-                <img src="assets/post-4images/image10.png" alt="Docker Build Output" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
-                <p style="font-size: 0.85em; color: #a0a0a0;">Building the Docker image</p>
-            </div>
-
-            <p><strong>Critical notes:</strong></p>
-            <ul style="padding-left: 20px; list-style-type: square;">
-                <li>Must use AWS base images or implement the <a href="https://docs.aws.amazon.com/lambda/latest/dg/images-create.html" style="color: #4da6ff;">Lambda Runtime Interface</a></li>
-                <li>Alpine Linux reduces image size but may need compatibility layers</li>
-                <li>ENTRYPOINT is not supported - use CMD instead</li>
-            </ul>
-        </div>
-
-        <div style="background-color: #121212; padding: 20px; border-radius: 6px; margin: 20px 0;">
-            <h4 style="color: #4da6ff; margin-top: 0;">2. IAM Permission Strategy</h4>
-            <p>Least-privilege roles are critical for security:</p>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0;">
-                <div>
-                    <h5 style="color: #4da6ff;">EC2 Instance Role</h5>
-                    <ul style="padding-left: 20px; list-style-type: circle;">
-                        <li><code>AmazonEC2ContainerRegistryPowerUser</code></li>
-                        <li><code>AWSCloudFormationReadOnlyAccess</code></li>
-                        <li>Optional: <code>AmazonS3ReadOnlyAccess</code></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 style="color: #4da6ff;">Lambda Execution Role</h5>
-                    <ul style="padding-left: 20px; list-style-type: circle;">
-                        <li><code>AWSLambdaBasicExecutionRole</code></li>
-                        <li><code>AmazonS3FullAccess</code> (if needed)</li>
-                        <li><code>AmazonDynamoDBFullAccess</code> (if needed)</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 20px;">
-                <img src="assets/post-4images/image8.png" alt="IAM Role Configuration" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
-                <p style="font-size: 0.85em; color: #a0a0a0;">IAM role configuration in AWS Console</p>
-            </div>
-
-            <div class="note" style="background-color: #1a2a3a; padding: 15px; border-left: 4px solid #ff6b6b; margin-top: 15px;">
-                <p><strong>Security Best Practice:</strong> Always scope permissions to specific resources using ARNs rather than granting full service access.</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Enhanced Implementation Guide -->
-    <h2 style="color: #4da6ff; margin-top: 40px; font-size: 1.8em; border-left: 5px solid #4da6ff; padding-left: 15px;">Step-by-Step Implementation</h2>
-
-    <!-- Enhanced Docker Setup -->
+    <!-- Docker Image Creation -->
     <div style="margin: 35px 0; border: 1px solid #2a4d7a; border-radius: 6px; overflow: hidden;">
         <div style="background-color: #2a4d7a; padding: 15px 20px;">
             <h3 style="color: #ffffff; margin: 0; font-size: 1.4em;">Phase 1: Building the Container</h3>
         </div>
         <div style="padding: 20px;">
-            <h4 style="color: #4da6ff; margin-top: 0;">Optimizing Docker Builds</h4>
-            <p>To improve build performance and image size:</p>
+            <h4 style="color: #4da6ff; margin-top: 0;">EC2 Instance Setup</h4>
+            <p>Create an Ubuntu 22.04 instance with the proper IAM role:</p>
             
-            <div style="margin: 20px 0;">
+            <div style="background-color: #121212; padding: 15px; border-radius: 4px; margin: 15px 0;">
                 <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
-# Use multi-stage builds to minimize final image size
-FROM public.ecr.aws/lambda/python:3.9 as builder
+# Transfer files to EC2
+scp -i &lt;pem file&gt; ./OCI.zip ubuntu@&lt;public IP&gt;:/home/ubuntu
 
-# Install build tools
-RUN yum install -y gcc python3-devel
-
-# Create virtual environment
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Final stage
-FROM public.ecr.aws/lambda/python:3.9
-
-# Copy only necessary files from builder
-COPY --from=builder /opt/venv /opt/venv
-COPY app.py .
-
-# Set environment
-ENV PATH="/opt/venv/bin:$PATH"
-CMD ["app.lambda_handler"]</pre>
-                <p style="font-size: 0.9em; color: #a0a0a0; margin-top: 10px;">Multi-stage Dockerfile reduces image size by 60-70%</p>
+# Install Docker and dependencies
+wget https://d6opu47qoi4ee.cloudfront.net/dockerinstallscript.sh
+bash ./dockerinstallscript.sh
+sudo apt install unzip -y
+unzip OCI.zip</pre>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 25px;">
-                <div>
-                    <h5 style="color: #4da6ff;">Build Command</h5>
-                    <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
-# Build with cache and progress tracking
-docker build \
-  --progress=plain \
-  --no-cache \
-  -t lambda_ecr .</pre>
-                </div>
-                <div>
-                    <h5 style="color: #4da6ff;">Size Optimization</h5>
-                    <ul style="padding-left: 20px; list-style-type: square;">
-                        <li>Use <code>.dockerignore</code> to exclude dev files</li>
-                        <li>Combine RUN commands to reduce layers</li>
-                        <li>Clean cache after installations</li>
-                    </ul>
-                </div>
+            <div class="note" style="background-color: #1a2a3a; padding: 15px; border-left: 4px solid #4da6ff; margin: 15px 0;">
+                <p><strong>IAM Role Requirements:</strong> The EC2 instance needs <code>EC2ContainerRegistryFullAccess</code> policy to push images to ECR.</p>
             </div>
+
+            <h4 style="color: #4da6ff; margin-top: 25px;">Building the Docker Image</h4>
+            <pre style="background-color: #1a1a1a; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff;">
+# Build the image
+docker build -t lambda_ecr .
+
+# Verify the image
+docker images</pre>
 
             <div style="text-align: center; margin-top: 25px;">
-                <img src="assets/post-4images/image10.png" alt="Docker Images List" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
-                <p style="font-size: 0.85em; color: #a0a0a0;">Verifying created Docker images</p>
+                <img src="assets/post-4images/image9.png" alt="Docker Build Output" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <p style="font-size: 0.85em; color: #a0a0a0;">Successful Docker image creation</p>
             </div>
         </div>
     </div>
@@ -190,12 +93,13 @@ docker build \
         </div>
         <div style="padding: 20px;">
             <h4 style="color: #4da6ff; margin-top: 0;">Creating the ECR Repository</h4>
+            <p>Navigate to ECR in AWS Console and create a private repository named <code>lambda_ecr</code>.</p>
             
             <div style="margin: 20px 0;">
-                <img src="assets/post-4images/image8.png" alt="ECR Repository Creation" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+             
                 <p style="font-size: 0.85em; color: #a0a0a0;">Creating the lambda_ecr repository in AWS Console</p>
             </div>
-            
+            <img src="assets/post-4images/image6.png" alt="ECR Repository Creation" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
             <h4 style="color: #4da6ff; margin-top: 25px;">Pushing the Docker Image</h4>
             <p>Use the ECR push commands to upload your container image:</p>
             
@@ -206,20 +110,20 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 # Tag and push the image
 docker tag lambda_ecr:latest [account-id].dkr.ecr.us-east-1.amazonaws.com/lambda_ecr:latest
 docker push [account-id].dkr.ecr.us-east-1.amazonaws.com/lambda_ecr:latest</pre>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
+      
+
                 <div>
-                    <img src="assets/post-4images/image3.png" alt="ECR Push Commands" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                    <img src="assets/post-4images/image1.png" alt="ECR Push Commands" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                     <p style="font-size: 0.85em; color: #a0a0a0;">ECR push commands from AWS Console</p>
                 </div>
                 <div>
                     <img src="assets/post-4images/image6.png" alt="Docker Login Success" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                     <p style="font-size: 0.85em; color: #a0a0a0;">Successful Docker login to ECR</p>
                 </div>
-            </div>
+        
             
             <div style="margin-top: 25px;">
-                <img src="assets/post-4images/image9.png" alt="Image in ECR" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <img src="assets/post-4images/image11.png" alt="Image in ECR" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0;">Successfully pushed image in ECR repository</p>
             </div>
         </div>
@@ -233,13 +137,22 @@ docker push [account-id].dkr.ecr.us-east-1.amazonaws.com/lambda_ecr:latest</pre>
         <div style="padding: 20px;">
             <h4 style="color: #4da6ff; margin-top: 0;">Creating the Lambda Function</h4>
             
+            <ol style="padding-left: 20px;">
+                <li>Navigate to AWS Lambda service</li>
+                <li>Click <strong>Create Function</strong></li>
+                <li>Select <strong>Container image</strong> option</li>
+                <li>Browse and select your ECR image</li>
+                <li>Use the existing <code>LabRole</code> IAM role</li>
+                <li>Click <strong>Create</strong></li>
+            </ol>
+            
             <div style="margin: 20px 0;">
                 <img src="assets/post-4images/image6.png" alt="Lambda Container Selection" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0;">Selecting container image option in Lambda</p>
             </div>
             
             <div style="margin: 20px 0;">
-                <img src="assets/post-4images/image2.png" alt="Lambda IAM Role" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                <img src="assets/post-4images/image3.png" alt="Lambda IAM Role" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                 <p style="font-size: 0.85em; color: #a0a0a0;">Configuring execution role for Lambda</p>
             </div>
             
@@ -247,7 +160,7 @@ docker push [account-id].dkr.ecr.us-east-1.amazonaws.com/lambda_ecr:latest</pre>
             
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                 <div>
-                    <img src="assets/post-4images/image13.png" alt="Created Lambda Function" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
+                    <img src="assets/post-4images/image2.png" alt="Created Lambda Function" style="max-width: 100%; border: 1px solid #444; border-radius: 4px;">
                     <p style="font-size: 0.85em; color: #a0a0a0;">Function overview in AWS Console</p>
                 </div>
                 <div>
@@ -262,104 +175,47 @@ docker push [account-id].dkr.ecr.us-east-1.amazonaws.com/lambda_ecr:latest</pre>
         </div>
     </div>
 
-    <!-- Enhanced Testing Section -->
-    <div style="margin: 35px 0; background-color: #1a2a3a; padding: 30px; border-radius: 6px; max-width: 100%; box-sizing: border-box;">
-        <h2 style="color: #4da6ff; margin-top: 0; font-size: 1.8em;">Advanced Testing Strategies</h2>
-        
-        <div style="display: grid; grid-template-columns: 1fr; gap: 25px; margin: 20px 0; max-width: 100%;">
-            <div style="min-width: 0;">
-                <h3 style="color: #4da6ff; font-size: 1.3em;">Local Testing</h3>
-                <p>Validate containers before ECR deployment:</p>
-                <pre style="background-color: #121212; padding: 15px; border-radius: 4px; overflow-x: auto; font-family: 'Courier New', monospace; color: #ffffff; margin: 15px 0; white-space: pre-wrap; word-wrap: break-word;">
-    # Test container locally
-    docker run -p 9000:8080 lambda_ecr:latest
-    
-    # Invoke function
-    curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" \
-      -d '{"payload":"hello"}'
-                </pre>
-                <p><strong>Benefits:</strong></p>
-                <ul style="padding-left: 20px; list-style-type: square;">
-                    <li>Faster debug cycles</li>
-                    <li>No AWS costs during development</li>
-                    <li>CI/CD pipeline integration</li>
-                </ul>
-            </div>
-            <div style="min-width: 0;">
-                <h3 style="color: #4da6ff; font-size: 1.3em;">Cloud Testing</h3>
-                <p>Once deployed to Lambda:</p>
-                <ol style="padding-left: 20px;">
-                    <li><strong>Cold Start Measurement:</strong>
-                        <pre style="background-color: #121212; padding: 10px; border-radius: 4px; font-family: 'Courier New', monospace; color: #ffffff; margin: 5px 0; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word;">
-    aws lambda invoke --function-name my-function \
-      --invocation-type RequestResponse \
-      --log-type Tail output.txt
-                        </pre>
-                    </li>
-                    <li><strong>Load Testing:</strong>
-                        <p>Use AWS Lambda Power Tuning tool to optimize memory allocation</p>
-                    </li>
-                    <li><strong>Integration Tests:</strong>
-                        <p>Configure test events for all code paths</p>
-                    </li>
-                </ol>
-            </div>
-        </div>
-    </div>
-
     <!-- Enhanced Conclusion -->
     <div style="margin: 40px 0 20px 0; border-top: 2px solid #2a4d7a; padding-top: 30px;">
-        <h2 style="color: #4da6ff; font-size: 1.8em;">Production-Ready Recommendations</h2>
+        <h2 style="color: #4da6ff; font-size: 1.8em;">Key Takeaways</h2>
         
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; margin: 25px 0;">
             <div style="background-color: #121212; padding: 20px; border-radius: 6px; border-left: 4px solid #4da6ff;">
-                <h3 style="color: #4da6ff; margin-top: 0;">CI/CD Pipeline</h3>
+                <h3 style="color: #4da6ff; margin-top: 0;">Development Benefits</h3>
                 <ul style="padding-left: 20px; list-style-type: square;">
-                    <li>GitHub Actions/AWS CodePipeline workflow</li>
-                    <li>Automated vulnerability scanning with Amazon Inspector</li>
-                    <li>Canary deployments using Lambda aliases</li>
+                    <li>Consistent environments from dev to production</li>
+                    <li>Larger dependency support (up to 10GB)</li>
+                    <li>Custom runtime capabilities</li>
                 </ul>
             </div>
             <div style="background-color: #121212; padding: 20px; border-radius: 6px; border-left: 4px solid #4da6ff;">
-                <h3 style="color: #4da6ff; margin-top: 0;">Performance Tuning</h3>
+                <h3 style="color: #4da6ff; margin-top: 0;">Operational Advantages</h3>
                 <ul style="padding-left: 20px; list-style-type: square;">
-                    <li>Provisioned concurrency for predictable latency</li>
-                    <li>ARM/Graviton2 processors for better price-performance</li>
-                    <li>Right-size memory allocation (test with Power Tuning)</li>
+                    <li>Combines serverless benefits with container control</li>
+                    <li>Existing Docker toolchain compatibility</li>
+                    <li>Better dependency isolation</li>
                 </ul>
             </div>
             <div style="background-color: #121212; padding: 20px; border-radius: 6px; border-left: 4px solid #4da6ff;">
-                <h3 style="color: #4da6ff; margin-top: 0;">Observability</h3>
+                <h3 style="color: #4da6ff; margin-top: 0;">Best Practices</h3>
                 <ul style="padding-left: 20px; list-style-type: square;">
-                    <li>AWS CloudWatch Logs Insights</li>
-                    <li>X-Ray tracing for distributed tracing</li>
-                    <li>Custom metrics for business KPIs</li>
+                    <li>Use multi-stage builds to reduce image size</li>
+                    <li>Implement proper IAM permission boundaries</li>
+                    <li>Monitor cold start performance</li>
                 </ul>
             </div>
         </div>
         
         <div style="margin-top: 30px; background-color: #1a2a3a; padding: 25px; border-radius: 6px;">
-            <h3 style="color: #4da6ff; font-size: 1.4em;">When to Choose Containers vs. ZIP</h3>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-top: 20px;">
-                <div>
-                    <h4 style="color: #4da6ff;">Choose Containers When:</h4>
-                    <ul style="padding-left: 20px; list-style-type: square;">
-                        <li>Dependencies exceed 250MB</li>
-                        <li>Need custom runtime versions</li>
-                        <li>Existing CI/CD uses Docker</li>
-                        <li>Require OS-level packages</li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 style="color: #4da6ff;">Stick with ZIP When:</h4>
-                    <ul style="padding-left: 20px; list-style-type: square;">
-                        <li>Simple functions with small dependencies</li>
-                        <li>Faster cold start times critical</li>
-                        <li>No Docker expertise available</li>
-                        <li>Basic AWS-supported runtimes suffice</li>
-                    </ul>
-                </div>
-            </div>
+            <h3 style="color: #4da6ff; font-size: 1.4em;">When to Use This Approach</h3>
+            <p>Container-based Lambda functions are particularly valuable for:</p>
+            <ul style="padding-left: 20px; list-style-type: square;">
+                <li>Machine learning models with large dependencies</li>
+                <li>Applications requiring specific system libraries</li>
+                <li>Teams already using containers in their workflow</li>
+                <li>Cases where traditional ZIP deployments hit size limits</li>
+            </ul>
+            <p style="margin-top: 15px;">This workflow represents a powerful combination of serverless efficiency and container flexibility, opening new possibilities for modern application development on AWS.</p>
         </div>
     </div>
 </div>
