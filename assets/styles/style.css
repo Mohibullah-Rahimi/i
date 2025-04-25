@@ -891,7 +891,6 @@ button:focus {
     width: 100%;
   }
 }
-
 .header__right {
   display: flex;
   align-items: start;
@@ -903,6 +902,17 @@ button:focus {
   min-width: 0;
 }
 
+/* Add these new rules */
+.hover-blue {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.hover-blue:hover {
+  color: #4285f4; /* Google blue - adjust as needed */
+}
+
+/* Keep the existing media queries */
 @media only screen and (max-width: 991px) {
   .header__right {
     padding-left: 0;
