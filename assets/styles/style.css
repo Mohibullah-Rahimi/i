@@ -2704,8 +2704,46 @@ button:focus {
     margin-top: 0.1875rem;
   }
 }
+/* Add this to your existing CSS *//* Add these styles to your existing CSS */
+.skills-category {
+  margin: 1.5rem 0 0.8rem 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 600;
+}
 
-/* Progress  */
+.skill-level {
+  background-color: transparent;
+  padding: 0.15rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  backdrop-filter: blur(4px);
+  margin-left: 0.5rem;
+}
+
+/* Mobile Responsiveness */
+@media only screen and (max-width: 768px) {
+  .skills-category {
+    margin: 1.2rem 0 0.6rem 0;
+    font-size: 1rem;
+  }
+  
+  .progress-text {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 0.2rem;
+  }
+  
+  .skill-level {
+    margin-left: 0;
+    margin-top: 0.2rem;
+    align-self: flex-end;
+  }
+}
+
+/* Keep all your original progress bar styles */
 .progress {
   background-color: #F7F9FA;
   border-radius: 1rem;
@@ -2721,10 +2759,6 @@ button:focus {
     margin-bottom: 0.75rem;
     height: 1.375rem;
   }
-}
-
-.progress:last-child {
-  margin-bottom: 0;
 }
 
 .progress-bar {
@@ -2749,18 +2783,6 @@ button:focus {
   width: 100%;
   z-index: 1;
 }
-
-.progress .progress-text>* {
-  min-width: 0;
-}
-
-@media screen and (-ms-high-contrast: active),
-(-ms-high-contrast: none) {
-  .progress-text span:nth-child(2) {
-    float: right;
-  }
-}
-
 /* -----------------------------------------------------------------
     - Other
 ----------------------------------------------------------------- */
