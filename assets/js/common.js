@@ -2,8 +2,8 @@
  * Optimized vCard JS
  * Author: Mohibullah Rahimi
  * Original Author: ArtStyles (ArtTemplate)
- * Version: 2.0.0
- * Optimized for performance and reliability
+ * Version: 2.1.0
+ * Optimized for performance and reliability with URL support
  */
 
 $(document).ready(function () {
@@ -221,32 +221,58 @@ $(document).ready(function () {
     }
 
     /*-----------------------------------------------------------------
-      Tabs System
+      Tabs System with URL Support
     -------------------------------------------------------------------*/
     function initTabs() {
         const $tabContents = $('.content .tabcontent');
         const $tabLinks = $('.nav__item a');
         const mobileBreakpoint = 580;
 
-        // Hide all tabs except first
-        $tabContents.hide().first().show();
+        // Map simple URLs to actual tab IDs
+        const tabMap = {
+            'about': 'about-tab',
+            'resume': 'resume-tab',
+            'portfolio': 'works-tab',
+            'blog': 'blog-tab',
+            'contact': 'contact-tab'
+        };
 
-        $tabLinks.on('click', function (e) {
-            e.preventDefault();
-
-            // Update active tab
+        // Function to show a tab
+        function showTab(tabId) {
+            const actualTabId = tabMap[tabId] || 'about-tab';
+            
+            // Hide all tabs
+            $tabContents.hide().removeClass('active');
+            // Show selected tab
+            $(`#${actualTabId}`).show().addClass('active');
+            
+            // Update active nav item
             $tabLinks.removeClass('active');
-            $(this).addClass('active');
-
-            // Show selected content
-            const currentTab = $(this).attr('href');
-            $tabContents.hide();
-            $(currentTab).show();
-
+            $(`.nav__item a[href="#${tabId}"]`).addClass('active');
+            
             // Special handling for Works tab
-            if (currentTab === '#works-tab') {
+            if (actualTabId === 'works-tab') {
                 setTimeout(initWorksTab, 300);
             }
+        }
+
+        // Check URL on page load
+        function checkUrl() {
+            const hash = window.location.hash.substring(1);
+            if (hash) {
+                showTab(hash);
+            } else {
+                // Default to About tab if no hash
+                showTab('about');
+            }
+        }
+
+        // Handle tab clicks
+        $tabLinks.on('click', function(e) {
+            e.preventDefault();
+            const tabId = $(this).attr('href').substring(1);
+            window.history.pushState(null, null, `#${tabId}`);
+            showTab(tabId);
 
             // Mobile behavior
             if ($window.width() < mobileBreakpoint) {
@@ -255,6 +281,12 @@ $(document).ready(function () {
                 }, 0);
             }
         });
+
+        // Handle browser back/forward
+        $(window).on('popstate', checkUrl);
+
+        // Initial setup
+        checkUrl();
     }
 
     /*-----------------------------------------------------------------
@@ -382,7 +414,7 @@ $(document).ready(function () {
                     }
                 },
                 error: function () {
-                    showFormError(".");   //An error occurred. Please try again
+                    showFormError("An error occurred. Please try again");
                 }
             });
         }
@@ -402,33 +434,76 @@ $(document).ready(function () {
     }
 
     /*-----------------------------------------------------------------
-      Modern Contact Form (Fetch API fallback)
+      Blog Post Handling with URL Support
     -------------------------------------------------------------------*/
-    function initModernContactForm() {
-        const form = document.getElementById('contact-form');
-        if (!form) return;
-
-        form.addEventListener('submit', function (e) {
+    function initBlogPosts() {
+        // Handle blog post clicks
+        $(document).on('click', '.load-blog-post', function (e) {
             e.preventDefault();
+            const postUrl = $(this).attr('href');
+            const postFile = $(this).data('post');
+            const postTitle = $(this).data('title');
+
+            // Update URL
+            window.history.pushState(null, null, postUrl);
             
-            fetch(this.action, {
-                method: 'POST',
-                body: new FormData(this),
-                headers: { 'Accept': 'application/json' }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        document.getElementById('form-success').style.display = 'block';
-                        form.reset();
-                setTimeout(() => {
-                    formSuccess.style.display = 'none';
-                }, 5000);
-                    }
-            })
-                .catch(() => {
-                    showFormError("Network error. Please try again.");
+            // Show loading state
+            $('#blog-posts-container').hide();
+            $('#single-post-container').show();
+            $('#back-to-blog').show();
+            $('#single-post-container .post-content').html('<div class="loading-spinner">Loading post...</div>');
+
+            // Load the post content
+            $('#single-post-container .post-content').load(postFile, function () {
+                // Update the page title
+                document.title = postTitle + " | Mohibullah Rahimi";
+
+                // Scroll to top of post
+                $('html, body').animate({
+                    scrollTop: $('#blog-tab').offset().top - 20
+                }, 300);
             });
         });
+
+        // Handle back button
+        $('#back-to-blog').on('click', function () {
+            window.history.pushState(null, null, '#blog');
+            $('#single-post-container').hide();
+            $('#blog-posts-container').show();
+            $(this).hide();
+            document.title = "Mohibullah Rahimi | Cloud & Network Engineer";
+        });
+
+        // Check URL for blog posts on page load
+        function checkBlogUrl() {
+            const hash = window.location.hash;
+            
+            if (hash.startsWith('#blog/')) {
+                const postSlug = hash.split('/')[1];
+                const link = $(`.load-blog-post[href="#blog/${postSlug}"]`);
+                
+                if (link.length) {
+                    link.trigger('click');
+                } else {
+                    showBlogList();
+                }
+            } else if (hash === '#blog') {
+                showBlogList();
+            }
+        }
+
+        function showBlogList() {
+            $('#single-post-container').hide();
+            $('#blog-posts-container').show();
+            $('#back-to-blog').hide();
+            document.title = 'Blog | Mohibullah Rahimi';
+        }
+
+        // Handle browser back/forward for blog
+        $(window).on('popstate', checkBlogUrl);
+        
+        // Initial check
+        checkBlogUrl();
     }
 
     /*-----------------------------------------------------------------
@@ -464,7 +539,7 @@ $(document).ready(function () {
         initLazyLoad();
         initObjectFit();
         initContactForm();
-        initModernContactForm();
+        initBlogPosts();
 
         // Initialize Works tab if active
         if ($('#works-tab').hasClass('active')) {
@@ -481,135 +556,4 @@ $(document).ready(function () {
 
     // Start everything
     initAll();
-    /*-----------------------------------------------------------------
-  Blog Post Handling
-------------------------------------------------------------------*/
-    /*-----------------------------------------------------------------
-      Blog Post Handling
-    ------------------------------------------------------------------*/
-    function initBlogPosts() {
-        // Handle blog post clicks
-        $(document).on('click', '.load-blog-post', function (e) {
-            e.preventDefault();
-            const postUrl = $(this).data('post');
-            const postTitle = $(this).data('title');
-
-            // Show loading state
-            $('#blog-posts-container').hide();
-            $('#single-post-container').show();
-            $('#back-to-blog').show();
-            $('#single-post-container .post-content').html('<div class="loading-spinner">Loading post...</div>');
-
-            // Load the post content
-            $('#single-post-container .post-content').load(postUrl, function () {
-                // Update the page title
-                document.title = postTitle + " | Mohibullah Rahimi";
-
-                // Scroll to top of post
-                $('html, body').animate({
-                    scrollTop: $('#blog-tab').offset().top - 20
-                }, 300);
-            });
-        });
-
-        // Handle back button
-        $('#back-to-blog').on('click', function () {
-            $('#single-post-container').hide();
-            $('#blog-posts-container').show();
-            $(this).hide();
-            document.title = "Mohibullah Rahimi | Cloud & Network Engineer";
-        });
-    }
-
-    // Initialize blog posts when page loads
-    initBlogPosts();
-
 });
-
-// Blog Post URL Routing
-document.addEventListener('DOMContentLoaded', function() {
-    // Check URL on initial load
-    checkBlogUrl();
-    
-    // Handle browser back/forward buttons
-    window.addEventListener('popstate', function() {
-        checkBlogUrl();
-    });
-    
-    // Handle back to blog button
-    document.getElementById('back-to-blog').addEventListener('click', function() {
-        window.history.pushState(null, null, '#blog');
-        showBlogList();
-    });
-    
-    // Modify existing post click handlers
-    document.querySelectorAll('.load-blog-post').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const postUrl = this.getAttribute('href');
-            loadBlogPost(
-                this.getAttribute('data-post'),
-                this.getAttribute('data-title')
-            );
-            
-            // Update URL without reloading
-            window.history.pushState(null, null, postUrl);
-        });
-    });
-});
-
-function checkBlogUrl() {
-    const hash = window.location.hash;
-    
-    if (hash.startsWith('#blog/')) {
-        // Extract post slug from URL
-        const postSlug = hash.split('/')[1];
-        const link = document.querySelector(`.load-blog-post[href="#blog/${postSlug}"]`);
-        
-        if (link) {
-            loadBlogPost(
-                link.getAttribute('data-post'),
-                link.getAttribute('data-title')
-            );
-        } else {
-            showBlogList();
-        }
-    } else if (hash === '#blog') {
-        showBlogList();
-    }
-    // If no matching hash, do nothing (default tab will show)
-}
-
-function loadBlogPost(postFile, postTitle) {
-    fetch(postFile)
-        .then(response => response.text())
-        .then(html => {
-            // Hide blog list, show single post
-            document.getElementById('blog-posts-container').style.display = 'none';
-            document.getElementById('single-post-container').style.display = 'block';
-            document.getElementById('back-to-blog').style.display = 'block';
-            
-            // Load post content
-            document.querySelector('#single-post-container .post-content').innerHTML = html;
-            
-            // Update page title
-            document.title = postTitle + ' | Mohibullah Rahimi';
-            
-            // Ensure blog tab is active
-            document.querySelector('.nav__item a[href="#blog-tab"]').click();
-        })
-        .catch(error => {
-            console.error('Error loading blog post:', error);
-            showBlogList();
-        });
-}
-
-function showBlogList() {
-    document.getElementById('blog-posts-container').style.display = 'block';
-    document.getElementById('single-post-container').style.display = 'none';
-    document.getElementById('back-to-blog').style.display = 'none';
-    document.title = 'Blog | Mohibullah Rahimi';
-    
-    // Ensure blog tab is active
-    document.querySelector('.nav__item a[href="#blog-tab"]').click();
-}
