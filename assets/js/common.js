@@ -523,4 +523,67 @@ $(document).ready(function () {
 
     // Initialize blog posts when page loads
     initBlogPosts();
+
+// Blog URL System
+function setupBlogURLs() {
+    // Check URL when page loads
+    checkBlogURL();
+    
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', checkBlogURL);
+    
+    // Back to blog button
+    document.getElementById('back-to-blog').addEventListener('click', function() {
+        window.location.hash = '#blog';
+        showBlogList();
+    });
+    
+    // Clicking on posts
+    document.querySelectorAll('.load-blog-post').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.hash = this.getAttribute('href');
+            loadBlogPost(this);
+        });
+    });
+}
+
+function checkBlogURL() {
+    const hash = window.location.hash;
+    
+    if (hash.startsWith('#blog/')) {
+        const postLink = document.querySelector(`.load-blog-post[href="${hash}"]`);
+        if (postLink) loadBlogPost(postLink);
+        else showBlogList();
+    } 
+    else if (hash === '#blog') {
+        showBlogList();
+    }
+}
+
+function loadBlogPost(link) {
+    const postFile = link.getAttribute('data-post');
+    const postTitle = link.getAttribute('data-title');
+    
+    fetch(postFile)
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('blog-posts-container').style.display = 'none';
+            document.getElementById('single-post-container').style.display = 'block';
+            document.getElementById('back-to-blog').style.display = 'block';
+            document.querySelector('#single-post-container .post-content').innerHTML = html;
+            document.title = postTitle + ' | Mohibullah Rahimi';
+        })
+        .catch(() => showBlogList());
+}
+
+function showBlogList() {
+    document.getElementById('blog-posts-container').style.display = 'block';
+    document.getElementById('single-post-container').style.display = 'none';
+    document.getElementById('back-to-blog').style.display = 'none';
+    document.title = 'Blog | Mohibullah Rahimi';
+}
+
+// Start the blog URL system when page loads
+document.addEventListener('DOMContentLoaded', setupBlogURLs);
 });
