@@ -524,57 +524,84 @@ $(document).ready(function () {
     // Initialize blog posts when page loads
     initBlogPosts();
 
-// Blog URL System
-function setupBlogURLs() {
-    // Check URL when page loads
-    checkBlogURL();
+});
+
+// Blog Post URL Routing
+document.addEventListener('DOMContentLoaded', function() {
+    // Check URL on initial load
+    checkBlogUrl();
     
     // Handle browser back/forward buttons
-    window.addEventListener('popstate', checkBlogURL);
+    window.addEventListener('popstate', function() {
+        checkBlogUrl();
+    });
     
-    // Back to blog button
+    // Handle back to blog button
     document.getElementById('back-to-blog').addEventListener('click', function() {
-        window.location.hash = '#blog';
+        window.history.pushState(null, null, '#blog');
         showBlogList();
     });
     
-    // Clicking on posts
+    // Modify existing post click handlers
     document.querySelectorAll('.load-blog-post').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            window.location.hash = this.getAttribute('href');
-            loadBlogPost(this);
+            const postUrl = this.getAttribute('href');
+            loadBlogPost(
+                this.getAttribute('data-post'),
+                this.getAttribute('data-title')
+            );
+            
+            // Update URL without reloading
+            window.history.pushState(null, null, postUrl);
         });
     });
-}
+});
 
-function checkBlogURL() {
+function checkBlogUrl() {
     const hash = window.location.hash;
     
     if (hash.startsWith('#blog/')) {
-        const postLink = document.querySelector(`.load-blog-post[href="${hash}"]`);
-        if (postLink) loadBlogPost(postLink);
-        else showBlogList();
-    } 
-    else if (hash === '#blog') {
+        // Extract post slug from URL
+        const postSlug = hash.split('/')[1];
+        const link = document.querySelector(`.load-blog-post[href="#blog/${postSlug}"]`);
+        
+        if (link) {
+            loadBlogPost(
+                link.getAttribute('data-post'),
+                link.getAttribute('data-title')
+            );
+        } else {
+            showBlogList();
+        }
+    } else if (hash === '#blog') {
         showBlogList();
     }
+    // If no matching hash, do nothing (default tab will show)
 }
 
-function loadBlogPost(link) {
-    const postFile = link.getAttribute('data-post');
-    const postTitle = link.getAttribute('data-title');
-    
+function loadBlogPost(postFile, postTitle) {
     fetch(postFile)
         .then(response => response.text())
         .then(html => {
+            // Hide blog list, show single post
             document.getElementById('blog-posts-container').style.display = 'none';
             document.getElementById('single-post-container').style.display = 'block';
             document.getElementById('back-to-blog').style.display = 'block';
+            
+            // Load post content
             document.querySelector('#single-post-container .post-content').innerHTML = html;
+            
+            // Update page title
             document.title = postTitle + ' | Mohibullah Rahimi';
+            
+            // Ensure blog tab is active
+            document.querySelector('.nav__item a[href="#blog-tab"]').click();
         })
-        .catch(() => showBlogList());
+        .catch(error => {
+            console.error('Error loading blog post:', error);
+            showBlogList();
+        });
 }
 
 function showBlogList() {
@@ -582,8 +609,7 @@ function showBlogList() {
     document.getElementById('single-post-container').style.display = 'none';
     document.getElementById('back-to-blog').style.display = 'none';
     document.title = 'Blog | Mohibullah Rahimi';
+    
+    // Ensure blog tab is active
+    document.querySelector('.nav__item a[href="#blog-tab"]').click();
 }
-
-// Start the blog URL system when page loads
-document.addEventListener('DOMContentLoaded', setupBlogURLs);
-});
