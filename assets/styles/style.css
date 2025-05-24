@@ -3097,3 +3097,21 @@ button:focus {
 .gutter-sizer {
   width: 0;
 }
+/* Ensure blog containers are properly styled */
+#blog-posts-container {
+    display: block;
+}
+
+#single-post-container {
+    display: none;
+}
+
+#back-to-blog {
+    display: none;
+    margin-bottom: 20px;
+}
+
+.loading-spinner {
+    text-align: center;
+    padding: 50px;
+}
